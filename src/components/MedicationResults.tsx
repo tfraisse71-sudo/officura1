@@ -1,9 +1,11 @@
-import { ExternalLink, Download, Clock } from "lucide-react";
+import { ExternalLink, Download, Clock, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { getMedicationData } from "@/data/mockMedicationData";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface MedicationResultsProps {
   medication1: string;
@@ -12,85 +14,98 @@ interface MedicationResultsProps {
 }
 
 export const MedicationResults = ({ medication1, medication2, mode }: MedicationResultsProps) => {
-  const medicationInfo = getMedicationData(medication1);
-  
-  const getMockData = () => {
-    if (!medicationInfo) {
-      return {
-        severity: "medium" as const,
-        title: `Informations non disponibles pour ${medication1}`,
-        summary: ["Les données pour ce médicament ne sont pas encore disponibles dans la base."],
-        details: [],
-        sources: [
-          { name: "RCP ANSM", url: "https://ansm.sante.fr" },
-        ],
-      };
-    }
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-    switch (mode) {
-      case "contre-indications":
-        return {
-          severity: medicationInfo.contraindications.severity,
-          title: `Contre-indications de ${medicationInfo.name}`,
-          summary: medicationInfo.contraindications.summary,
-          details: medicationInfo.contraindications.details,
-          sources: [
-            { name: "RCP ANSM", url: "https://ansm.sante.fr" },
-            { name: "Notice", url: "https://ansm.sante.fr" },
-          ],
-        };
-      case "grossesse":
-        return {
-          severity: medicationInfo.pregnancy.severity,
-          title: `${medicationInfo.name} - Utilisation pendant la grossesse`,
-          summary: medicationInfo.pregnancy.summary,
-          details: medicationInfo.pregnancy.details,
-          sources: [
-            { name: "CRAT", url: "https://www.lecrat.fr" },
-            { name: "RCP ANSM", url: "https://ansm.sante.fr" },
-          ],
-        };
-      case "allaitement":
-        return {
-          severity: medicationInfo.breastfeeding.severity,
-          title: `${medicationInfo.name} - Utilisation pendant l'allaitement`,
-          summary: medicationInfo.breastfeeding.summary,
-          details: medicationInfo.breastfeeding.details,
-          sources: [
-            { name: "CRAT", url: "https://www.lecrat.fr" },
-          ],
-        };
-      case "interactions":
-        return {
-          severity: medication2 ? "high" as const : "low" as const,
-          title: medication2 
-            ? `Interactions entre ${medicationInfo.name} et ${medication2}`
-            : "Sélectionnez un deuxième médicament",
-          summary: medication2 ? [
-            "Association déconseillée",
-            "Risque hémorragique augmenté",
-            "Surveillance biologique rapprochée nécessaire",
-          ] : [],
-          details: medication2 ? [
-            {
-              title: "Mécanisme",
-              content: "Potentialisation de l'effet anticoagulant avec augmentation du risque hémorragique.",
-            },
-            {
-              title: "Conduite à tenir",
-              content: "Si l'association ne peut être évitée : surveillance clinique étroite et contrôle biologique de l'INR plus fréquent.",
-            },
-          ] : [],
-          sources: medication2 ? [
-            { name: "Thesaurus ANSM", url: "https://ansm.sante.fr/thesaurus" },
-          ] : [],
-        };
-      default:
-        return null;
-    }
-  };
+  useEffect(() => {
+    const fetchMedicationInfo = async () => {
+      setLoading(true);
+      try {
+        if (mode === "interactions" && medication2) {
+          const { data: result, error } = await supabase.functions.invoke('medication-interactions', {
+            body: { medication1, medication2 }
+          });
 
-  const data = getMockData();
+          if (error) throw error;
+          
+          setData({
+            ...result,
+            title: `Interactions entre ${medication1} et ${medication2}`,
+            sources: [
+              { name: "Thesaurus ANSM", url: "https://ansm.sante.fr/thesaurus" },
+            ]
+          });
+        } else if (mode !== "interactions") {
+          const { data: result, error } = await supabase.functions.invoke('medication-info', {
+            body: { medicationName: medication1, mode }
+          });
+
+          if (error) throw error;
+
+          let title = "";
+          let sources: { name: string; url: string }[] = [];
+
+          switch (mode) {
+            case "contre-indications":
+              title = `Contre-indications de ${medication1}`;
+              sources = [
+                { name: "RCP ANSM", url: "https://ansm.sante.fr" },
+                { name: "Notice", url: "https://ansm.sante.fr" },
+              ];
+              break;
+            case "grossesse":
+              title = `${medication1} - Utilisation pendant la grossesse`;
+              sources = [
+                { name: "CRAT", url: "https://www.lecrat.fr" },
+                { name: "RCP ANSM", url: "https://ansm.sante.fr" },
+              ];
+              break;
+            case "allaitement":
+              title = `${medication1} - Utilisation pendant l'allaitement`;
+              sources = [
+                { name: "CRAT", url: "https://www.lecrat.fr" },
+              ];
+              break;
+          }
+
+          setData({
+            ...result,
+            title,
+            sources
+          });
+        }
+      } catch (error: any) {
+        console.error('Error fetching medication info:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de récupérer les informations. Veuillez réessayer.",
+          variant: "destructive",
+        });
+        setData({
+          severity: "medium",
+          title: `Informations non disponibles`,
+          summary: ["Les données ne sont pas disponibles pour le moment."],
+          details: [],
+          sources: []
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMedicationInfo();
+  }, [medication1, medication2, mode, toast]);
+
+  if (loading) {
+    return (
+      <Card className="p-8 text-center">
+        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+        <p className="text-muted-foreground">Recherche des informations officielles...</p>
+      </Card>
+    );
+  }
+
   if (!data) return null;
 
   const getSeverityBadge = (severity: string) => {

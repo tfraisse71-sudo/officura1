@@ -1,16 +1,20 @@
-import { useState, useMemo } from "react";
-import { Search, Info } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Search, Info, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useMedicationData } from "@/hooks/useMedicationData";
-import { getMedicationData } from "@/data/mockMedicationData";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export const DosageSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMed, setSelectedMed] = useState<string | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [dosageData, setDosageData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const medications = useMedicationData();
 
@@ -24,14 +28,43 @@ export const DosageSection = () => {
       .slice(0, 10);
   }, [searchTerm, medications]);
 
+  useEffect(() => {
+    const fetchDosageInfo = async () => {
+      if (!selectedMed) {
+        setDosageData([]);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const { data, error } = await supabase.functions.invoke('medication-dosage', {
+          body: { medicationName: selectedMed }
+        });
+
+        if (error) throw error;
+
+        setDosageData(data?.dosages || []);
+      } catch (error: any) {
+        console.error('Error fetching dosage info:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de récupérer les posologies. Veuillez réessayer.",
+          variant: "destructive",
+        });
+        setDosageData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDosageInfo();
+  }, [selectedMed, toast]);
+
   const handleSelectMed = (med: string) => {
     setSelectedMed(med);
     setSearchTerm(med);
     setShowSuggestions(false);
   };
-
-  const medicationInfo = selectedMed ? getMedicationData(selectedMed) : null;
-  const dosageData = medicationInfo?.dosages || [];
 
   return (
     <div className="space-y-6">
@@ -79,20 +112,27 @@ export const DosageSection = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-semibold">
-                Posologies : {medicationInfo?.name || selectedMed}
+                Posologies : {selectedMed}
               </h3>
               <Badge variant="outline">Source : RCP ANSM</Badge>
             </div>
             
-            {dosageData.length === 0 && (
+            {loading && (
+              <Card className="p-8 text-center">
+                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+                <p className="text-muted-foreground">Recherche des posologies officielles...</p>
+              </Card>
+            )}
+
+            {!loading && dosageData.length === 0 && (
               <Card className="p-4 bg-muted/30">
                 <p className="text-sm text-muted-foreground">
-                  Les données de posologie pour ce médicament ne sont pas encore disponibles dans la base.
+                  Les données de posologie pour ce médicament ne sont pas encore disponibles.
                 </p>
               </Card>
             )}
 
-            {dosageData.length > 0 && (
+            {!loading && dosageData.length > 0 && (
               <div className="overflow-x-auto">
                 <Table>
                 <TableHeader>

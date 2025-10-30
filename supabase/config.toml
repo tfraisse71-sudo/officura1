@@ -1,0 +1,10 @@
+project_id = "olvsadoyrfwsbhacqteg"
+
+[functions.medication-info]
+verify_jwt = false
+
+[functions.medication-interactions]
+verify_jwt = false
+
+[functions.medication-dosage]
+verify_jwt = false
