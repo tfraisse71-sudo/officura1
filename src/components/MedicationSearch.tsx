@@ -23,7 +23,7 @@ export const MedicationSearch = () => {
     const term = searchTerm1.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     return medications
       .filter(med => 
-        med.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(term)
+        med.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").startsWith(term)
       )
       .slice(0, 10);
   }, [searchTerm1, medications]);
@@ -33,7 +33,7 @@ export const MedicationSearch = () => {
     const term = searchTerm2.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     return medications
       .filter(med => 
-        med.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(term)
+        med.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").startsWith(term)
       )
       .slice(0, 10);
   }, [searchTerm2, medications]);
