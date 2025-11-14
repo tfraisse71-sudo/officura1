@@ -10,7 +10,7 @@ import { MedicationResults } from "./MedicationResults";
 export const MedicationSearch = () => {
   const [searchTerm1, setSearchTerm1] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
-  const [selectedMode, setSelectedMode] = useState("contre-indications");
+  const [selectedMode, setSelectedMode] = useState("indications");
   const [showSuggestions1, setShowSuggestions1] = useState(false);
   const [showSuggestions2, setShowSuggestions2] = useState(false);
   const [selectedMed1, setSelectedMed1] = useState<string | null>(null);
@@ -90,8 +90,10 @@ export const MedicationSearch = () => {
           </div>
 
           <Tabs value={selectedMode} onValueChange={setSelectedMode} className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 gap-2 h-auto">
+              <TabsTrigger value="indications">Indications</TabsTrigger>
               <TabsTrigger value="contre-indications">Contre-indications</TabsTrigger>
+              <TabsTrigger value="conseils-prise">Conseils de prise</TabsTrigger>
               <TabsTrigger value="grossesse">Grossesse</TabsTrigger>
               <TabsTrigger value="allaitement">Allaitement</TabsTrigger>
               <TabsTrigger value="interactions">Interactions</TabsTrigger>

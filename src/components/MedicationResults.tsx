@@ -47,11 +47,25 @@ export const MedicationResults = ({ medication1, medication2, mode }: Medication
           let sources: { name: string; url: string }[] = [];
 
           switch (mode) {
+            case "indications":
+              title = `Indications thérapeutiques de ${medication1}`;
+              sources = [
+                { name: "RCP ANSM", url: "https://ansm.sante.fr" },
+                { name: "Vidal", url: "https://www.vidal.fr" },
+              ];
+              break;
             case "contre-indications":
               title = `Contre-indications de ${medication1}`;
               sources = [
                 { name: "RCP ANSM", url: "https://ansm.sante.fr" },
                 { name: "Notice", url: "https://ansm.sante.fr" },
+              ];
+              break;
+            case "conseils-prise":
+              title = `${medication1} - Conseils de prise`;
+              sources = [
+                { name: "RCP ANSM", url: "https://ansm.sante.fr" },
+                { name: "Notice patient", url: "https://ansm.sante.fr" },
               ];
               break;
             case "grossesse":

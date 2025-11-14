@@ -137,6 +137,83 @@ serve(async (req) => {
         };
         break;
 
+      case "indications":
+        systemPrompt = `Tu es un expert médical spécialisé dans l'analyse des indications thérapeutiques.
+        Recherche et fournis les indications officielles du médicament selon l'ANSM et le RCP.
+        Liste toutes les pathologies et conditions pour lesquelles ce médicament est indiqué.
+        Classe la sévérité comme: critical, high, medium, low, safe (utilise "safe" pour les indications validées).`;
+        
+        toolFunction = {
+          name: "extract_indications",
+          description: "Extraire les indications thérapeutiques d'un médicament",
+          parameters: {
+            type: "object",
+            properties: {
+              severity: {
+                type: "string",
+                enum: ["critical", "high", "medium", "low", "safe"]
+              },
+              summary: {
+                type: "array",
+                items: { type: "string" },
+                description: "Liste de 3-5 points clés des principales indications"
+              },
+              details: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    title: { type: "string" },
+                    content: { type: "string" }
+                  }
+                },
+                description: "Détails approfondis sur les indications par pathologie"
+              }
+            },
+            required: ["severity", "summary", "details"],
+            additionalProperties: false
+          }
+        };
+        break;
+
+      case "conseils-prise":
+        systemPrompt = `Tu es un expert médical spécialisé dans les modalités de prise des médicaments.
+        Recherche et fournis les conseils officiels de prise du médicament : pendant/en dehors des repas, avec/sans eau, moment de la journée, précautions particulières.
+        Classe la sévérité comme: critical (consignes strictes), high (important), medium (recommandé), low (conseil), safe (flexible).`;
+        
+        toolFunction = {
+          name: "extract_administration_advice",
+          description: "Extraire les conseils de prise et d'administration",
+          parameters: {
+            type: "object",
+            properties: {
+              severity: {
+                type: "string",
+                enum: ["critical", "high", "medium", "low", "safe"]
+              },
+              summary: {
+                type: "array",
+                items: { type: "string" },
+                description: "Liste de 3-5 points clés sur les modalités de prise"
+              },
+              details: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    title: { type: "string" },
+                    content: { type: "string" }
+                  }
+                },
+                description: "Détails sur les moments de prise, interactions alimentaires, etc."
+              }
+            },
+            required: ["severity", "summary", "details"],
+            additionalProperties: false
+          }
+        };
+        break;
+
       default:
         throw new Error(`Mode non supporté: ${mode}`);
     }
