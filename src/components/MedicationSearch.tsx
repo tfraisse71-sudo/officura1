@@ -139,15 +139,15 @@ export const MedicationSearch = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <Card className="p-6 border-primary/20 shadow-md">
-        <div className="space-y-4">
+    <div className="space-y-4 sm:space-y-6">
+      <Card className="p-3 sm:p-4 md:p-6 border-primary/20 shadow-md">
+        <div className="space-y-3 sm:space-y-4">
           <div className="relative">
-            <label htmlFor="med1" className="block text-sm font-medium mb-2">
+            <label htmlFor="med1" className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">
               Médicament ou DCI
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
               <Input
                 id="med1"
                 type="text"
@@ -159,7 +159,7 @@ export const MedicationSearch = () => {
                   setShowSuggestions1(true);
                 }}
                 onFocus={() => setShowSuggestions1(true)}
-                className="pl-10"
+                className="pl-8 sm:pl-10 text-sm"
               />
             </div>
             {showSuggestions1 && suggestions1.length > 0 && (
@@ -168,7 +168,7 @@ export const MedicationSearch = () => {
                   <button
                     key={idx}
                     onClick={() => handleSelectMed1(med)}
-                    className="w-full text-left px-4 py-2 hover:bg-secondary transition-colors text-sm"
+                    className="w-full text-left px-3 sm:px-4 py-2 hover:bg-secondary transition-colors text-xs sm:text-sm"
                   >
                     {med}
                   </button>
@@ -178,22 +178,22 @@ export const MedicationSearch = () => {
           </div>
 
           <Tabs value={selectedMode} onValueChange={setSelectedMode} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 gap-1 h-auto">
-              <TabsTrigger value="indications-conseils" className="text-xs sm:text-sm">Indications + Conseils</TabsTrigger>
-              <TabsTrigger value="contre-indications" className="text-xs sm:text-sm">Contre-indications</TabsTrigger>
-              <TabsTrigger value="grossesse" className="text-xs sm:text-sm">Grossesse</TabsTrigger>
-              <TabsTrigger value="allaitement" className="text-xs sm:text-sm">Allaitement</TabsTrigger>
-              <TabsTrigger value="interactions" className="text-xs sm:text-sm">Interactions</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1 sm:gap-1.5 h-auto p-0.5 sm:p-1">
+              <TabsTrigger value="indications-conseils" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Indications</TabsTrigger>
+              <TabsTrigger value="contre-indications" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Contre-ind.</TabsTrigger>
+              <TabsTrigger value="grossesse" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Grossesse</TabsTrigger>
+              <TabsTrigger value="allaitement" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Allaitement</TabsTrigger>
+              <TabsTrigger value="interactions" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Interactions</TabsTrigger>
             </TabsList>
           </Tabs>
 
           {selectedMode === "interactions" && (
             <div className="relative">
-              <label htmlFor="med2" className="block text-sm font-medium mb-2">
+              <label htmlFor="med2" className="block text-xs sm:text-sm font-medium mb-2">
                 Deuxième médicament
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
                 <Input
                   id="med2"
                   type="text"
@@ -205,7 +205,7 @@ export const MedicationSearch = () => {
                     setShowSuggestions2(true);
                   }}
                   onFocus={() => setShowSuggestions2(true)}
-                  className="pl-10"
+                  className="pl-8 sm:pl-10 text-sm"
                 />
               </div>
               {showSuggestions2 && suggestions2.length > 0 && (
@@ -214,7 +214,7 @@ export const MedicationSearch = () => {
                     <button
                       key={idx}
                       onClick={() => handleSelectMed2(med)}
-                      className="w-full text-left px-4 py-2 hover:bg-secondary transition-colors text-sm"
+                      className="w-full text-left px-3 sm:px-4 py-2 hover:bg-secondary transition-colors text-xs sm:text-sm"
                     >
                       {med}
                     </button>
