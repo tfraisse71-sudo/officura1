@@ -24,17 +24,48 @@ export const TravelSection = () => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [travelData, setTravelData] = useState<TravelData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
-  const handleSearch = async () => {
-    if (searchTerm.length < 2) return;
-    
-    setSelectedCountry(searchTerm);
+  // Fetch country suggestions
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchTerm.length < 2) {
+        setSuggestions([]);
+        return;
+      }
+
+      setIsLoadingSuggestions(true);
+      try {
+        const { data } = await supabase.functions.invoke('search-countries', {
+          body: { searchTerm }
+        });
+
+        if (data?.success && data?.countries) {
+          setSuggestions(data.countries);
+        }
+      } catch (error) {
+        console.error('Error fetching suggestions:', error);
+      } finally {
+        setIsLoadingSuggestions(false);
+      }
+    };
+
+    const debounce = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(debounce);
+  }, [searchTerm]);
+
+  const handleSelectCountry = async (country: string) => {
+    setSearchTerm(country);
+    setShowSuggestions(false);
+    setSelectedCountry(country);
     setIsLoading(true);
     setTravelData(null);
 
     try {
       const { data, error } = await supabase.functions.invoke('travel-recommendations', {
-        body: { country: searchTerm }
+        body: { country }
       });
 
       if (error) {
@@ -57,8 +88,8 @@ export const TravelSection = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+    if (e.key === 'Enter' && searchTerm.length >= 2) {
+      handleSelectCountry(searchTerm);
     }
   };
 
@@ -77,13 +108,40 @@ export const TravelSection = () => {
                 type="text"
                 placeholder="Ex : Sénégal, Thaïlande, Brésil..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => setShowSuggestions(true)}
                 onKeyDown={handleKeyDown}
                 className="pl-8 sm:pl-10 text-sm"
               />
             </div>
+            
+            {/* Suggestions dropdown */}
+            {showSuggestions && searchTerm.length >= 2 && (suggestions.length > 0 || isLoadingSuggestions) && (
+              <Card className="absolute z-50 w-full mt-1 max-h-60 overflow-auto bg-background border shadow-lg">
+                {isLoadingSuggestions ? (
+                  <div className="flex items-center justify-center p-3">
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    <span className="ml-2 text-sm text-muted-foreground">Recherche...</span>
+                  </div>
+                ) : (
+                  suggestions.map((country, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSelectCountry(country)}
+                      className="w-full text-left px-4 py-2 hover:bg-secondary transition-colors text-sm"
+                    >
+                      {country}
+                    </button>
+                  ))
+                )}
+              </Card>
+            )}
+            
             <p className="text-xs text-muted-foreground mt-2">
-              Tapez le nom d'un pays et appuyez sur Entrée pour obtenir les recommandations
+              Tapez 2 lettres pour voir les suggestions
             </p>
           </div>
         </div>
