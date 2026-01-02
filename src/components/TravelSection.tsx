@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Globe, AlertTriangle, Syringe, Shield, Droplets, Info, Loader2 } from "lucide-react";
+import { Globe, AlertTriangle, Syringe, Shield, Droplets, Info, Loader2, FileDown, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -17,6 +18,7 @@ interface TravelData {
     contrindications: string;
   }[];
   conseils: string[];
+  sources?: { name: string; url: string }[];
 }
 
 export const TravelSection = () => {
@@ -27,6 +29,7 @@ export const TravelSection = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   // Fetch country suggestions
   useEffect(() => {
@@ -90,6 +93,45 @@ export const TravelSection = () => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && searchTerm.length >= 2) {
       handleSelectCountry(searchTerm);
+    }
+  };
+
+  const handleGeneratePdf = async () => {
+    if (!selectedCountry || !travelData) return;
+    
+    setIsGeneratingPdf(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-travel-pdf', {
+        body: { country: selectedCountry, travelData }
+      });
+
+      if (error) {
+        console.error('Error generating PDF:', error);
+        toast.error("Erreur lors de la génération du PDF");
+        return;
+      }
+
+      if (data?.success && data?.html) {
+        // Create a blob from the HTML and download it
+        const blob = new Blob([data.html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = data.filename || `prevention-voyage-${selectedCountry}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        toast.success("Document généré ! Ouvrez-le dans votre navigateur et imprimez en PDF.");
+      } else if (data?.error) {
+        toast.error(data.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("Une erreur est survenue");
+    } finally {
+      setIsGeneratingPdf(false);
     }
   };
 
@@ -259,15 +301,82 @@ export const TravelSection = () => {
                   ))}
                 </ul>
               </div>
-
-              <div className="mt-4 pt-4 border-t">
-                <p className="text-[10px] sm:text-xs text-muted-foreground">
-                  Sources : Santé publique France, OMS, Institut Pasteur, Ministère des Affaires étrangères • 
-                  Dernière MAJ : {new Date().toLocaleDateString('fr-FR')}
-                </p>
-              </div>
             </Card>
           )}
+
+          {/* Sources Section */}
+          <Card className="p-4 sm:p-6 shadow-md bg-muted/20">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm sm:text-base font-semibold">Sources officielles</h3>
+                <Button 
+                  onClick={handleGeneratePdf}
+                  disabled={isGeneratingPdf}
+                  size="sm"
+                  variant="outline"
+                  className="gap-2"
+                >
+                  {isGeneratingPdf ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <FileDown className="h-4 w-4" />
+                  )}
+                  <span className="hidden sm:inline">Générer PDF</span>
+                </Button>
+              </div>
+              
+              {travelData.sources && travelData.sources.length > 0 ? (
+                <div className="space-y-2">
+                  {travelData.sources.map((source, idx) => (
+                    <a
+                      key={idx}
+                      href={source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-xs sm:text-sm text-primary hover:underline"
+                    >
+                      <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                      <span>{source.name}</span>
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <a
+                    href="https://www.pasteur.fr/fr/centre-medical/preparer-son-voyage"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs sm:text-sm text-primary hover:underline"
+                  >
+                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                    <span>Institut Pasteur - Centre médical</span>
+                  </a>
+                  <a
+                    href="https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs sm:text-sm text-primary hover:underline"
+                  >
+                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                    <span>Ministère des Affaires étrangères</span>
+                  </a>
+                  <a
+                    href="https://www.santepubliquefrance.fr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs sm:text-sm text-primary hover:underline"
+                  >
+                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                    <span>Santé Publique France</span>
+                  </a>
+                </div>
+              )}
+              
+              <p className="text-[10px] sm:text-xs text-muted-foreground pt-2 border-t">
+                Dernière mise à jour : {new Date().toLocaleDateString('fr-FR')}
+              </p>
+            </div>
+          </Card>
 
           <Card className="p-3 sm:p-4 bg-muted/30 border-muted">
             <div className="flex items-start gap-2 sm:gap-3">

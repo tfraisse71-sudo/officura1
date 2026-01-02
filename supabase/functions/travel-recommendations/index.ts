@@ -46,6 +46,14 @@ Pour chaque pays, tu dois fournir:
 2. Les vaccinations recommandées
 3. Les informations sur le paludisme (zones à risque, prophylaxie recommandée)
 4. Les conseils pratiques de prévention
+5. Les sources officielles avec leurs URLs EXACTES et FONCTIONNELLES
+
+IMPORTANT pour les sources:
+- Utilise UNIQUEMENT des URLs qui existent réellement et sont accessibles
+- Pour l'Institut Pasteur: https://www.pasteur.fr/fr/centre-medical/preparer-son-voyage
+- Pour Santé Publique France: https://www.santepubliquefrance.fr
+- Pour le Ministère des Affaires étrangères: https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/
+- Pour l'OMS: https://www.who.int/fr
 
 Réponds UNIQUEMENT avec un JSON valide sans markdown, dans ce format exact:
 {
@@ -64,11 +72,16 @@ Réponds UNIQUEMENT avec un JSON valide sans markdown, dans ce format exact:
       "contrindications": "Contre-indications principales"
     }
   ],
-  "conseils": ["Conseil 1", "Conseil 2", "..."]
+  "conseils": ["Conseil 1", "Conseil 2", "..."],
+  "sources": [
+    { "name": "Institut Pasteur - Centre médical", "url": "https://www.pasteur.fr/fr/centre-medical/preparer-son-voyage" },
+    { "name": "Diplomatie.gouv.fr - Conseils voyageurs", "url": "https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/" }
+  ]
 }
 
 Si le paludisme n'est pas présent dans le pays, retourne un tableau prophylaxies vide.
-Base tes recommandations sur les sources officielles françaises (Institut Pasteur, Santé Publique France, BEH).`
+Base tes recommandations sur les sources officielles françaises (Institut Pasteur, Santé Publique France, BEH).
+Fournis TOUJOURS au moins 3 sources avec des URLs valides.`
           },
           {
             role: 'user',

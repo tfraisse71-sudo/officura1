@@ -1,5 +1,29 @@
 project_id = "olvsadoyrfwsbhacqteg"
 
+[functions.search-medications]
+verify_jwt = false
+
+[functions.medication-info]
+verify_jwt = false
+
+[functions.medication-interactions]
+verify_jwt = false
+
+[functions.medication-dosage]
+verify_jwt = false
+
+[functions.search-countries]
+verify_jwt = false
+
+[functions.travel-recommendations]
+verify_jwt = false
+
+[functions.analyze-vaccines]
+verify_jwt = false
+
+[functions.generate-travel-pdf]
+verify_jwt = false
+
 [functions.medication-info]
 verify_jwt = false
 
