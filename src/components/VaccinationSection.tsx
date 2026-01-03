@@ -46,9 +46,7 @@ export const VaccinationSection = () => {
   // Liste complète des vaccins selon le calendrier vaccinal français 2024-2025
   const vaccines = [
     // Vaccins obligatoires du nourrisson
-    { id: "dtcp", label: "DTP (Diphtérie-Tétanos-Polio)", category: "Obligatoire" },
-    { id: "coqueluche", label: "Coqueluche", category: "Obligatoire" },
-    { id: "haemophilus", label: "Haemophilus influenzae b (Hib)", category: "Obligatoire" },
+    { id: "dtcp", label: "DTCP (Diphtérie-Tétanos-Coqueluche-Polio)", category: "Obligatoire" },
     { id: "hepatiteB", label: "Hépatite B", category: "Obligatoire" },
     { id: "pneumocoque", label: "Pneumocoque (Prevenar)", category: "Obligatoire" },
     { id: "meningocoqueC", label: "Méningocoque C", category: "Obligatoire" },
