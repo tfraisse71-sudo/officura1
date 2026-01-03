@@ -100,13 +100,16 @@ Réponds UNIQUEMENT avec un JSON valide sans markdown :
           {
             role: 'user',
             content: `Patient de ${age} ans, sexe: ${sex || 'non précisé'}.
-Vaccins déjà réalisés: ${completedVaccines && completedVaccines.length > 0 ? completedVaccines.join(', ') : 'aucun indiqué'}.
 
-Analyse la situation vaccinale de ce patient selon le calendrier vaccinal français officiel. 
-- Liste les vaccins en retard QUI PEUVENT ENCORE ÊTRE RATTRAPÉS
-- Liste les vaccins à venir
-- Liste les vaccins qui NE PEUVENT PLUS être rattrapés car trop tard
-- Donne des recommandations personnalisées`
+VACCINS DÉJÀ RÉALISÉS ET À JOUR: ${completedVaccines && completedVaccines.length > 0 ? completedVaccines.join(', ') : 'aucun indiqué'}.
+
+IMPORTANT: Les vaccins cochés ci-dessus signifient que le patient est À JOUR pour ces vaccins (y compris les rappels nécessaires pour son âge). Ne les mets PAS dans "enRetard".
+
+Analyse la situation vaccinale de ce patient selon le calendrier vaccinal français officiel:
+- "enRetard": UNIQUEMENT les vaccins NON cochés qui auraient dû être faits et qui peuvent encore être rattrapés
+- "aVenir": Les prochains vaccins/rappels à prévoir (y compris les futurs rappels des vaccins déjà faits)
+- "nonRattrapables": Les vaccins NON cochés dont le délai est dépassé
+- "recommandations": Conseils personnalisés`
           }
         ],
       }),
