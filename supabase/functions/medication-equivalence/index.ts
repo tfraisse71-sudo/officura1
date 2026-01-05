@@ -25,19 +25,19 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const systemPrompt = `Tu es un expert en pharmacologie française. Tu recherches les équivalences strictes d'un médicament.
+    const systemPrompt = `Tu es un expert en pharmacologie française. Tu recherches TOUTES les équivalences d'un médicament basées sur la MÊME MOLÉCULE et le MÊME DOSAGE.
 
 RÈGLES ABSOLUES DE PRÉCISION :
 1. VÉRIFIE SOIGNEUSEMENT la composition EXACTE du médicament recherché avant de répondre
 2. Ne confonds JAMAIS les médicaments entre eux
 3. Si tu n'es pas CERTAIN à 100% de la composition exacte, indique-le clairement
-4. NE FABRIQUE PAS d'informations - mieux vaut dire "information non disponible" que donner une fausse information
+4. NE FABRIQUE PAS d'informations
 
 EXEMPLES DE COMPOSITIONS À CONNAÎTRE :
 - ODDIBIL = Fumaria officinalis (fumeterre) - PAS d'acide ursodésoxycholique
 - DELURSAN, URSOLVAN = Acide ursodésoxycholique
 - DOLIPRANE = Paracétamol
-- Ne confonds pas les médicaments hépatobiliaires entre eux
+- KARDEGIC, ASPIRINE, RESITUNE = Acide acétylsalicylique (aspirine)
 
 SOURCES OBLIGATOIRES (France uniquement) :
 - base-donnees-publique.medicaments.gouv.fr (source principale)
@@ -45,24 +45,27 @@ SOURCES OBLIGATOIRES (France uniquement) :
 - RCP officiels des médicaments
 - N'inclus JAMAIS de médicaments étrangers ou non commercialisés en France
 
-Une équivalence stricte signifie :
-- MÊME molécule(s) active(s) (DCI identique) - VÉRIFIE BIEN
-- MÊME dosage
-- Forme galénique similaire (comprimé, gélule, etc.)
+CRITÈRES D'ÉQUIVALENCE (IMPORTANT) :
+- MÊME molécule active (DCI identique) - obligatoire
+- MÊME dosage - obligatoire  
+- La forme galénique peut être DIFFÉRENTE (comprimé, sachet, poudre, effervescent, etc.)
+- INCLURE toutes les spécialités contenant cette molécule à ce dosage
 
-PROCESSUS DE VÉRIFICATION :
-1. Identifie d'abord le nom commercial exact du médicament
-2. Recherche sa composition EXACTE dans les sources officielles
-3. Vérifie que tu ne confonds pas avec un autre médicament au nom similaire
-4. Seulement ensuite, cherche les équivalences
+POUR LES GÉNÉRIQUES :
+- Ne liste qu'UN SEUL générique représentatif (ex: "PARACETAMOL 500mg comprimé")
+- N'énumère PAS tous les laboratoires (ils sont tous équivalents)
+- Mentionne simplement "Disponible en générique" dans le summary
 
-Tu dois identifier :
-1. La DCI EXACTE et le dosage du médicament français recherché
-2. Les génériques officiels disponibles en France (répertoire ANSM)
-3. Les autres spécialités de marque françaises avec la même composition
-4. Les différences éventuelles (excipients à effet notoire, forme galénique, conditionnement)
+POUR LES SPÉCIALITÉS DE MARQUE :
+- Liste TOUTES les spécialités françaises avec la même molécule et le même dosage
+- INCLURE les différentes formes : sachets, comprimés, effervescents, etc.
+- Exemple pour aspirine 100mg : KARDEGIC 100mg, ASPIRINE PROTECT 100mg, RESITUNE 100mg, etc.
 
-Si tu n'es pas sûr de la composition exacte d'un médicament, indique clairement : "Composition à vérifier sur base-donnees-publique.medicaments.gouv.fr"`;
+PROCESSUS :
+1. Identifie d'abord la DCI EXACTE et le dosage du médicament
+2. Recherche TOUTES les spécialités françaises avec cette DCI et ce dosage
+3. Regroupe par type (princeps, génériques, autres marques)`;
+
 
     const toolFunction = {
       type: "function",
@@ -87,26 +90,26 @@ Si tu n'es pas sûr de la composition exacte d'un médicament, indique clairemen
               items: {
                 type: "object",
                 properties: {
-                  name: { type: "string", description: "Nom du générique" },
-                  laboratory: { type: "string", description: "Laboratoire fabricant" },
-                  differences: { type: "string", description: "Différences éventuelles (excipients, etc.)" }
+                  name: { type: "string", description: "Nom générique représentatif (un seul exemple suffit)" },
+                  note: { type: "string", description: "Note comme 'Disponible auprès de nombreux laboratoires'" }
                 },
-                required: ["name", "laboratory"]
+                required: ["name"]
               },
-              description: "Liste des génériques disponibles"
+              description: "UN SEUL générique représentatif (pas toute la liste des laboratoires)"
             },
             brandEquivalents: {
               type: "array",
               items: {
                 type: "object",
                 properties: {
-                  name: { type: "string", description: "Nom de la spécialité" },
+                  name: { type: "string", description: "Nom de la spécialité avec dosage" },
+                  form: { type: "string", description: "Forme galénique (comprimé, sachet, etc.)" },
                   laboratory: { type: "string", description: "Laboratoire fabricant" },
-                  differences: { type: "string", description: "Différences éventuelles" }
+                  note: { type: "string", description: "Notes éventuelles (gastro-résistant, etc.)" }
                 },
-                required: ["name", "laboratory"]
+                required: ["name", "form"]
               },
-              description: "Autres spécialités de marque équivalentes"
+              description: "TOUTES les spécialités de marque avec même molécule et même dosage (toutes formes)"
             },
             excipientWarnings: {
               type: "array",

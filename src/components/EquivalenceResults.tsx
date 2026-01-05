@@ -18,15 +18,21 @@ interface MedicationAnalysis {
   form: string;
 }
 
+interface GenericMed {
+  name: string;
+  note?: string;
+}
+
 interface EquivalentMed {
   name: string;
-  laboratory: string;
-  differences?: string;
+  form?: string;
+  laboratory?: string;
+  note?: string;
 }
 
 interface EquivalenceData {
   medicationAnalysis: MedicationAnalysis;
-  generics: EquivalentMed[];
+  generics: GenericMed[];
   brandEquivalents: EquivalentMed[];
   excipientWarnings: string[];
   summary: string[];
@@ -132,76 +138,64 @@ export const EquivalenceResults = ({ medication }: EquivalenceResultsProps) => {
             </div>
           )}
 
-          {/* Generics */}
+          {/* Generics - Simplified display */}
           {data.generics.length > 0 && (
-            <Accordion type="single" collapsible defaultValue="generics">
-              <AccordionItem value="generics">
-                <AccordionTrigger className="text-left text-sm sm:text-base">
-                  <div className="flex items-center gap-2">
-                    <Pill className="h-4 w-4" />
-                    Génériques ({data.generics.length})
+            <div className="bg-secondary/30 rounded-lg p-3 sm:p-4">
+              <h4 className="font-medium mb-2 text-sm sm:text-base flex items-center gap-2">
+                <Pill className="h-4 w-4 text-accent" />
+                Génériques disponibles
+              </h4>
+              <div className="space-y-2">
+                {data.generics.map((generic, idx) => (
+                  <div key={idx} className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="text-[10px] sm:text-xs">
+                        Générique
+                      </Badge>
+                      <span className="text-sm font-medium">{generic.name}</span>
+                    </div>
+                    {generic.note && (
+                      <span className="text-xs text-muted-foreground">{generic.note}</span>
+                    )}
                   </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-2">
-                    {data.generics.map((generic, idx) => (
-                      <div key={idx} className="bg-muted/20 rounded-lg p-3 text-sm">
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <p className="font-medium">{generic.name}</p>
-                            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                              <Building2 className="h-3 w-3" />
-                              {generic.laboratory}
-                            </p>
-                          </div>
-                          <Badge variant="secondary" className="text-[10px] sm:text-xs">
-                            Générique
-                          </Badge>
-                        </div>
-                        {generic.differences && (
-                          <p className="text-xs text-amber-600 dark:text-amber-400 mt-2 flex items-start gap-1">
-                            <AlertTriangle className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                            {generic.differences}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+                ))}
+              </div>
+            </div>
           )}
 
-          {/* Brand Equivalents */}
+          {/* Brand Equivalents - Full list with forms */}
           {data.brandEquivalents.length > 0 && (
-            <Accordion type="single" collapsible>
-              <AccordionItem value="brands">
-                <AccordionTrigger className="text-left text-sm sm:text-base">
+            <Accordion type="single" collapsible defaultValue="brands">
+              <AccordionItem value="brands" className="border-none">
+                <AccordionTrigger className="text-left text-sm sm:text-base hover:no-underline py-3 px-4 bg-primary/10 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <Pill className="h-4 w-4" />
-                    Spécialités de marque ({data.brandEquivalents.length})
+                    <Pill className="h-4 w-4 text-primary" />
+                    <span>Spécialités équivalentes ({data.brandEquivalents.length})</span>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-2">
+                <AccordionContent className="pt-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {data.brandEquivalents.map((brand, idx) => (
-                      <div key={idx} className="bg-muted/20 rounded-lg p-3 text-sm">
+                      <div key={idx} className="bg-card border border-border/50 rounded-lg p-3 text-sm hover:border-primary/30 transition-colors">
                         <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <p className="font-medium">{brand.name}</p>
-                            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                              <Building2 className="h-3 w-3" />
-                              {brand.laboratory}
-                            </p>
+                          <div className="space-y-1">
+                            <p className="font-semibold text-foreground">{brand.name}</p>
+                            {brand.form && (
+                              <Badge variant="outline" className="text-[10px] font-normal">
+                                {brand.form}
+                              </Badge>
+                            )}
+                            {brand.laboratory && (
+                              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                                <Building2 className="h-3 w-3" />
+                                {brand.laboratory}
+                              </p>
+                            )}
                           </div>
-                          <Badge variant="outline" className="text-[10px] sm:text-xs">
-                            Marque
-                          </Badge>
                         </div>
-                        {brand.differences && (
-                          <p className="text-xs text-amber-600 dark:text-amber-400 mt-2 flex items-start gap-1">
-                            <AlertTriangle className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                            {brand.differences}
+                        {brand.note && (
+                          <p className="text-xs text-muted-foreground mt-2 italic">
+                            {brand.note}
                           </p>
                         )}
                       </div>
