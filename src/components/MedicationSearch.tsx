@@ -164,7 +164,7 @@ export const MedicationSearch = () => {
               />
             </div>
             {showSuggestions1 && suggestions1.length > 0 && (
-              <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card/95 backdrop-blur-lg shadow-lg">
+              <Card className="absolute z-50 w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card backdrop-blur-none shadow-lg">
                 {suggestions1.map((med, idx) => (
                   <button
                     key={idx}
@@ -211,7 +211,7 @@ export const MedicationSearch = () => {
                 />
               </div>
               {showSuggestions2 && suggestions2.length > 0 && (
-                <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card/95 backdrop-blur-lg shadow-lg">
+                <Card className="absolute z-50 w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card backdrop-blur-none shadow-lg">
                   {suggestions2.map((med, idx) => (
                     <button
                       key={idx}
