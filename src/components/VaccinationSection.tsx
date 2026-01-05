@@ -155,12 +155,17 @@ export const VaccinationSection = () => {
             </div>
           </div>
 
-          <div>
-            <p className="text-xs sm:text-sm font-medium mb-3">Vaccins déjà réalisés (optionnel)</p>
+          <div className="space-y-4">
+            <p className="text-xs sm:text-sm font-medium">Vaccins déjà réalisés (optionnel)</p>
             
             {/* Vaccins obligatoires */}
-            <div className="mb-4">
-              <p className="text-xs text-muted-foreground mb-2 font-medium">Vaccins obligatoires (nourrisson)</p>
+            <div className="p-3 sm:p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="outline" className="border-red-500/50 text-red-600 text-[10px] sm:text-xs">
+                  Obligatoire
+                </Badge>
+                <span className="text-xs text-muted-foreground">Nourrisson (depuis 2018)</span>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                 {vaccines.filter(v => v.category === "Obligatoire").map((vaccine) => (
                   <div key={vaccine.id} className="flex items-center space-x-2">
@@ -181,8 +186,13 @@ export const VaccinationSection = () => {
             </div>
 
             {/* Vaccins recommandés */}
-            <div className="mb-4">
-              <p className="text-xs text-muted-foreground mb-2 font-medium">Vaccins recommandés</p>
+            <div className="p-3 sm:p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="outline" className="border-blue-500/50 text-blue-600 text-[10px] sm:text-xs">
+                  Recommandé
+                </Badge>
+                <span className="text-xs text-muted-foreground">Selon profil et âge</span>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                 {vaccines.filter(v => v.category === "Recommandé").map((vaccine) => (
                   <div key={vaccine.id} className="flex items-center space-x-2">
@@ -203,8 +213,13 @@ export const VaccinationSection = () => {
             </div>
 
             {/* Vaccins adultes/seniors */}
-            <div>
-              <p className="text-xs text-muted-foreground mb-2 font-medium">Vaccins adultes / seniors</p>
+            <div className="p-3 sm:p-4 bg-purple-500/5 border border-purple-500/20 rounded-lg">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="outline" className="border-purple-500/50 text-purple-600 text-[10px] sm:text-xs">
+                  Adulte / Senior
+                </Badge>
+                <span className="text-xs text-muted-foreground">Selon recommandations</span>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                 {vaccines.filter(v => v.category === "Adulte/Senior").map((vaccine) => (
                   <div key={vaccine.id} className="flex items-center space-x-2">
