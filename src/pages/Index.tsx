@@ -9,13 +9,16 @@ import logo from "@/assets/medisafe-logo.png";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background glow effect */}
+      <div className="absolute inset-0 bg-gradient-glow pointer-events-none" />
+      
       {/* Header */}
-      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-40 shadow-sm">
+      <header className="border-b border-border/50 glass sticky top-0 z-40 shadow-lg">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3">
-              <img src={logo} alt="MediSafe" className="h-8 sm:h-10 md:h-12 w-auto" />
+              <img src={logo} alt="MediSafe" className="h-8 sm:h-10 md:h-12 w-auto drop-shadow-lg" />
             </div>
             <div className="text-right">
               <p className="text-[10px] sm:text-xs text-muted-foreground">Version 1.0</p>
@@ -28,19 +31,19 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
         <Tabs defaultValue="medicament" className="space-y-4 sm:space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto gap-1.5 sm:gap-2 p-1">
-            <TabsTrigger value="medicament" className="gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto gap-1.5 sm:gap-2 p-1.5 bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl">
+            <TabsTrigger value="medicament" className="gap-1 sm:gap-2 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all duration-300">
               Médicament
             </TabsTrigger>
-            <TabsTrigger value="posologie" className="gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
+            <TabsTrigger value="posologie" className="gap-1 sm:gap-2 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all duration-300">
               <Calculator className="h-3 w-3 sm:h-4 sm:w-4" />
               Posologie
             </TabsTrigger>
-            <TabsTrigger value="vaccins" className="gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
+            <TabsTrigger value="vaccins" className="gap-1 sm:gap-2 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all duration-300">
               <Syringe className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Mes </span>Vaccins
             </TabsTrigger>
-            <TabsTrigger value="voyage" className="gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
+            <TabsTrigger value="voyage" className="gap-1 sm:gap-2 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all duration-300">
               <Plane className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Prévention </span>Voyage
             </TabsTrigger>
@@ -89,11 +92,11 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-card mt-8 sm:mt-10 md:mt-12">
+      <footer className="border-t border-border/50 glass mt-8 sm:mt-10 md:mt-12 relative">
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
-          <Card className="p-3 sm:p-4 bg-muted/30 border-muted mb-3 sm:mb-4">
-            <p className="text-xs sm:text-sm text-center leading-relaxed">
-              <strong>Avertissement :</strong> MediSafe ne remplace pas l'avis d'un professionnel de santé. 
+          <Card className="p-3 sm:p-4 bg-secondary/30 border-border/50 mb-3 sm:mb-4 backdrop-blur-sm">
+            <p className="text-xs sm:text-sm text-center leading-relaxed text-muted-foreground">
+              <strong className="text-foreground">Avertissement :</strong> MediSafe ne remplace pas l'avis d'un professionnel de santé. 
               Les informations présentées sont issues de sources officielles françaises (ANSM, CRAT, HAS, Santé publique France) 
               et sont fournies à titre indicatif.
             </p>

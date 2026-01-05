@@ -2,140 +2,146 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Modern dark medical theme - sleek and professional */
 
 @layer base {
   :root {
-    /* Medical professional theme - trustworthy blues and greens */
-    --background: 210 20% 98%;
-    --foreground: 215 25% 15%;
+    /* Dark modern theme by default */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Primary: Medical blue - professional and trustworthy */
-    --primary: 210 85% 45%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary: Vibrant cyan-blue - modern and tech-forward */
+    --primary: 199 89% 48%;
+    --primary-foreground: 222 47% 11%;
 
-    /* Secondary: Soft teal for accents */
-    --secondary: 195 25% 95%;
-    --secondary-foreground: 210 85% 45%;
+    /* Secondary: Slate with slight blue tint */
+    --secondary: 217 33% 20%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 15% 50%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 195 60% 50%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent: Teal for highlights */
+    --accent: 172 66% 50%;
+    --accent-foreground: 222 47% 11%;
 
-    /* Success: Medical green for safe/compatible */
-    --success: 145 65% 45%;
+    /* Success: Emerald green */
+    --success: 160 84% 39%;
     --success-foreground: 0 0% 100%;
 
-    /* Warning: Amber for caution */
+    /* Warning: Amber */
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    /* Destructive: Red for contraindications */
-    --destructive: 0 72% 51%;
+    /* Destructive: Coral red */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 20% 88%;
-    --input: 215 20% 92%;
-    --ring: 210 85% 45%;
+    --border: 217 33% 22%;
+    --input: 217 33% 20%;
+    --ring: 199 89% 48%;
 
     --radius: 0.75rem;
 
     /* Sidebar */
-    --sidebar-background: 210 25% 97%;
-    --sidebar-foreground: 215 25% 20%;
-    --sidebar-primary: 210 85% 45%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 195 25% 92%;
-    --sidebar-accent-foreground: 215 25% 20%;
-    --sidebar-border: 215 20% 88%;
-    --sidebar-ring: 210 85% 45%;
+    --sidebar-background: 222 47% 12%;
+    --sidebar-foreground: 210 40% 95%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 33% 18%;
+    --sidebar-accent-foreground: 210 40% 95%;
+    --sidebar-border: 217 33% 22%;
+    --sidebar-ring: 199 89% 48%;
 
-    /* Custom medical severity badges */
-    --severity-critical: 0 72% 51%;
-    --severity-high: 25 85% 55%;
+    /* Severity badges - modern neon accents */
+    --severity-critical: 0 84% 60%;
+    --severity-high: 25 95% 53%;
     --severity-medium: 38 92% 50%;
-    --severity-low: 45 85% 55%;
-    --severity-safe: 145 65% 45%;
+    --severity-low: 45 93% 47%;
+    --severity-safe: 160 84% 39%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(210 85% 45%), hsl(195 80% 50%));
-    --gradient-subtle: linear-gradient(180deg, hsl(210 20% 98%), hsl(210 20% 96%));
+    /* Modern gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(199 89% 48%), hsl(172 66% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(222 47% 11%), hsl(222 47% 14%));
+    --gradient-card: linear-gradient(145deg, hsl(222 47% 15%), hsl(222 47% 12%));
+    --gradient-glow: radial-gradient(ellipse at top, hsl(199 89% 48% / 0.15), transparent 50%);
     
-    /* Shadows */
-    --shadow-sm: 0 1px 2px hsl(215 25% 15% / 0.05);
-    --shadow-md: 0 4px 6px hsl(215 25% 15% / 0.07);
-    --shadow-lg: 0 10px 15px hsl(215 25% 15% / 0.1);
+    /* Modern shadows with glow effect */
+    --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 12px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 10px 25px hsl(0 0% 0% / 0.5);
+    --shadow-glow: 0 0 20px hsl(199 89% 48% / 0.3);
     
     /* Transitions */
-    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    --background: 215 30% 8%;
-    --foreground: 210 20% 95%;
+    /* Same as root - already dark */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 215 28% 12%;
-    --card-foreground: 210 20% 95%;
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 215 28% 12%;
-    --popover-foreground: 210 20% 95%;
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 210 85% 55%;
-    --primary-foreground: 215 30% 8%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 215 25% 18%;
-    --secondary-foreground: 210 20% 95%;
+    --secondary: 217 33% 20%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 215 25% 18%;
-    --muted-foreground: 215 15% 60%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 195 60% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 172 66% 50%;
+    --accent-foreground: 222 47% 11%;
 
-    --success: 145 65% 50%;
+    --success: 160 84% 39%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 38 92% 55%;
+    --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 55%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 25% 22%;
-    --input: 215 25% 18%;
-    --ring: 210 85% 55%;
+    --border: 217 33% 22%;
+    --input: 217 33% 20%;
+    --ring: 199 89% 48%;
 
-    --sidebar-background: 215 28% 10%;
-    --sidebar-foreground: 210 20% 90%;
-    --sidebar-primary: 210 85% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 25% 16%;
-    --sidebar-accent-foreground: 210 20% 90%;
-    --sidebar-border: 215 25% 22%;
-    --sidebar-ring: 210 85% 55%;
+    --sidebar-background: 222 47% 12%;
+    --sidebar-foreground: 210 40% 95%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 33% 18%;
+    --sidebar-accent-foreground: 210 40% 95%;
+    --sidebar-border: 217 33% 22%;
+    --sidebar-ring: 199 89% 48%;
 
-    --severity-critical: 0 72% 55%;
-    --severity-high: 25 85% 60%;
-    --severity-medium: 38 92% 55%;
-    --severity-low: 45 85% 60%;
-    --severity-safe: 145 65% 50%;
+    --severity-critical: 0 84% 60%;
+    --severity-high: 25 95% 53%;
+    --severity-medium: 38 92% 50%;
+    --severity-low: 45 93% 47%;
+    --severity-safe: 160 84% 39%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(210 85% 55%), hsl(195 80% 55%));
-    --gradient-subtle: linear-gradient(180deg, hsl(215 30% 8%), hsl(215 28% 12%));
+    --gradient-primary: linear-gradient(135deg, hsl(199 89% 48%), hsl(172 66% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(222 47% 11%), hsl(222 47% 14%));
+    --gradient-card: linear-gradient(145deg, hsl(222 47% 15%), hsl(222 47% 12%));
+    --gradient-glow: radial-gradient(ellipse at top, hsl(199 89% 48% / 0.15), transparent 50%);
     
     --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.3);
-    --shadow-md: 0 4px 6px hsl(0 0% 0% / 0.4);
-    --shadow-lg: 0 10px 15px hsl(0 0% 0% / 0.5);
+    --shadow-md: 0 4px 12px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 10px 25px hsl(0 0% 0% / 0.5);
+    --shadow-glow: 0 0 20px hsl(199 89% 48% / 0.3);
   }
 }
 
@@ -145,6 +151,21 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* Modern UI enhancements */
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-xl bg-card/80;
+  }
+  
+  .glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-primary;
   }
 }
