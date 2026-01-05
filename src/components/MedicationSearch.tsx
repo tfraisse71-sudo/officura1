@@ -141,7 +141,7 @@ export const MedicationSearch = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <Card className="p-3 sm:p-4 md:p-6 border-primary/20 shadow-md">
+      <Card className="p-3 sm:p-4 md:p-6 border-border/50 shadow-lg bg-card/80 backdrop-blur-sm">
         <div className="space-y-3 sm:space-y-4">
           <div className="relative">
             <label htmlFor="med1" className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">
@@ -164,12 +164,12 @@ export const MedicationSearch = () => {
               />
             </div>
             {showSuggestions1 && suggestions1.length > 0 && (
-              <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto">
+              <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card/95 backdrop-blur-lg shadow-lg">
                 {suggestions1.map((med, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSelectMed1(med)}
-                    className="w-full text-left px-3 sm:px-4 py-2 hover:bg-secondary transition-colors text-xs sm:text-sm"
+                    className="w-full text-left px-3 sm:px-4 py-2.5 hover:bg-primary/20 hover:text-primary transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0"
                   >
                     {med}
                   </button>
@@ -179,13 +179,13 @@ export const MedicationSearch = () => {
           </div>
 
           <Tabs value={selectedMode} onValueChange={setSelectedMode} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-1 sm:gap-1.5 h-auto p-0.5 sm:p-1">
-              <TabsTrigger value="indications-conseils" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Indications</TabsTrigger>
-              <TabsTrigger value="contre-indications" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Contre-ind.</TabsTrigger>
-              <TabsTrigger value="grossesse" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Grossesse</TabsTrigger>
-              <TabsTrigger value="allaitement" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Allaitement</TabsTrigger>
-              <TabsTrigger value="interactions" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Interactions</TabsTrigger>
-              <TabsTrigger value="equivalence" className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-1 sm:px-3">Équivalence</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-1 sm:gap-1.5 h-auto p-1 bg-secondary/50 backdrop-blur-sm rounded-lg">
+              <TabsTrigger value="indications-conseils" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Indications</TabsTrigger>
+              <TabsTrigger value="contre-indications" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Contre-ind.</TabsTrigger>
+              <TabsTrigger value="grossesse" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Grossesse</TabsTrigger>
+              <TabsTrigger value="allaitement" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Allaitement</TabsTrigger>
+              <TabsTrigger value="interactions" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Interactions</TabsTrigger>
+              <TabsTrigger value="equivalence" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Équivalence</TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -211,12 +211,12 @@ export const MedicationSearch = () => {
                 />
               </div>
               {showSuggestions2 && suggestions2.length > 0 && (
-                <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto">
+                <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card/95 backdrop-blur-lg shadow-lg">
                   {suggestions2.map((med, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleSelectMed2(med)}
-                      className="w-full text-left px-3 sm:px-4 py-2 hover:bg-secondary transition-colors text-xs sm:text-sm"
+                      className="w-full text-left px-3 sm:px-4 py-2.5 hover:bg-primary/20 hover:text-primary transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0"
                     >
                       {med}
                     </button>
@@ -240,7 +240,7 @@ export const MedicationSearch = () => {
         />
       )}
 
-      <Card className="p-4 bg-muted/30 border-muted">
+      <Card className="p-4 bg-secondary/30 border-border/50 backdrop-blur-sm">
         <div className="flex items-start gap-3">
           <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
           <div className="text-sm text-muted-foreground">
