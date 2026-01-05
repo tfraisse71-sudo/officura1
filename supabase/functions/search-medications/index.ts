@@ -20,10 +20,15 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const systemPrompt = `Tu es un expert pharmaceutique français. 
-    Recherche et fournis une liste de médicaments français (noms commerciaux et DCI) qui commencent par les lettres données.
-    Fournis uniquement des médicaments réels et autorisés en France.
-    Limite ta réponse à 10 médicaments maximum.`;
+    const systemPrompt = `Tu es un expert pharmaceutique français spécialisé dans la pharmacopée française.
+    
+RÈGLE ABSOLUE : Tu ne dois fournir QUE des médicaments officiellement autorisés en France par l'ANSM (Agence Nationale de Sécurité du Médicament).
+- Utilise UNIQUEMENT les noms commerciaux français présents dans la base de données publique des médicaments (base-donnees-publique.medicaments.gouv.fr)
+- N'inclus JAMAIS de médicaments étrangers, américains, ou non commercialisés en France
+- Les noms doivent correspondre exactement aux spécialités françaises (ex: DOLIPRANE, EFFERALGAN, SPASFON, etc.)
+
+Recherche et fournis une liste de médicaments français qui commencent par les lettres données.
+Limite ta réponse à 10 médicaments maximum.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

@@ -20,9 +20,16 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const systemPrompt = `Tu es un expert médical spécialisé dans les posologies médicamenteuses.
-    Recherche et fournis les posologies officielles du médicament demandé selon le RCP de l'ANSM.
-    Fournis des informations détaillées par tranche d'âge/poids incluant la voie d'administration, dose par prise, fréquence, dose max par prise et dose max par 24h.`;
+    const systemPrompt = `Tu es un expert médical français spécialisé dans les posologies médicamenteuses.
+    
+RÈGLE ABSOLUE : Utilise UNIQUEMENT les sources officielles françaises :
+- RCP officiels sur base-donnees-publique.medicaments.gouv.fr
+- ANSM (Agence Nationale de Sécurité du Médicament)
+- N'utilise JAMAIS d'informations provenant de sources étrangères (FDA, posologies américaines, etc.)
+- Les posologies doivent correspondre aux AMM françaises
+
+Recherche et fournis les posologies officielles du médicament français demandé selon le RCP.
+Fournis des informations détaillées par tranche d'âge/poids incluant la voie d'administration, dose par prise, fréquence, dose max par prise et dose max par 24h.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

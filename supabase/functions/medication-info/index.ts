@@ -26,9 +26,15 @@ serve(async (req) => {
     
     switch (mode) {
       case "contre-indications":
-        systemPrompt = `Tu es un expert médical spécialisé dans l'analyse des contre-indications médicamenteuses. 
-        Recherche et fournis les contre-indications officielles du médicament demandé selon les sources françaises (ANSM, RCP).
-        Classe la sévérité comme: critical (CI absolue), high (association déconseillée), medium (prudence), low (précaution), safe (compatible).`;
+        systemPrompt = `Tu es un expert médical spécialisé dans l'analyse des contre-indications médicamenteuses en France.
+        
+RÈGLE ABSOLUE : Utilise UNIQUEMENT les informations officielles des médicaments autorisés par l'ANSM.
+- Base tes réponses sur les RCP (Résumé des Caractéristiques du Produit) officiels français
+- Source : base-donnees-publique.medicaments.gouv.fr
+- N'utilise JAMAIS d'informations provenant de sources étrangères (FDA, EMA générique, etc.)
+
+Recherche et fournis les contre-indications officielles du médicament demandé.
+Classe la sévérité comme: critical (CI absolue), high (association déconseillée), medium (prudence), low (précaution), safe (compatible).`;
         
         toolFunction = {
           name: "extract_contraindications",
@@ -65,9 +71,15 @@ serve(async (req) => {
         break;
 
       case "grossesse":
-        systemPrompt = `Tu es un expert médical spécialisé dans l'utilisation des médicaments pendant la grossesse.
-        Recherche les informations officielles du CRAT et de l'ANSM sur l'utilisation de ce médicament pendant la grossesse.
-        Classe la sévérité comme: critical (CI absolue), high (association déconseillée), medium (prudence), low (précaution), safe (compatible).`;
+        systemPrompt = `Tu es un expert médical spécialisé dans l'utilisation des médicaments pendant la grossesse en France.
+        
+RÈGLE ABSOLUE : Utilise UNIQUEMENT les sources officielles françaises :
+- CRAT (Centre de Référence sur les Agents Tératogènes) : lecrat.fr
+- ANSM et RCP officiels : base-donnees-publique.medicaments.gouv.fr
+- N'utilise JAMAIS d'informations provenant de sources étrangères
+
+Recherche les informations sur l'utilisation de ce médicament français pendant la grossesse.
+Classe la sévérité comme: critical (CI absolue), high (association déconseillée), medium (prudence), low (précaution), safe (compatible).`;
         
         toolFunction = {
           name: "extract_pregnancy_info",
@@ -102,9 +114,15 @@ serve(async (req) => {
         break;
 
       case "allaitement":
-        systemPrompt = `Tu es un expert médical spécialisé dans l'utilisation des médicaments pendant l'allaitement.
-        Recherche les informations officielles du CRAT sur l'utilisation de ce médicament pendant l'allaitement.
-        Classe la sévérité comme: critical (CI absolue), high (association déconseillée), medium (prudence), low (précaution), safe (compatible).`;
+        systemPrompt = `Tu es un expert médical spécialisé dans l'utilisation des médicaments pendant l'allaitement en France.
+        
+RÈGLE ABSOLUE : Utilise UNIQUEMENT les sources officielles françaises :
+- CRAT (Centre de Référence sur les Agents Tératogènes) : lecrat.fr
+- ANSM et RCP officiels : base-donnees-publique.medicaments.gouv.fr
+- N'utilise JAMAIS d'informations provenant de sources étrangères
+
+Recherche les informations sur l'utilisation de ce médicament français pendant l'allaitement.
+Classe la sévérité comme: critical (CI absolue), high (association déconseillée), medium (prudence), low (précaution), safe (compatible).`;
         
         toolFunction = {
           name: "extract_breastfeeding_info",
@@ -138,11 +156,17 @@ serve(async (req) => {
         break;
 
       case "indications-conseils":
-        systemPrompt = `Tu es un expert médical spécialisé dans l'analyse des indications thérapeutiques et des modalités de prise des médicaments.
-        Recherche et fournis:
-        1. Les indications officielles du médicament selon l'ANSM et le RCP (pathologies et conditions pour lesquelles il est indiqué)
-        2. Les conseils de prise: pendant/en dehors des repas, avec/sans eau, moment de la journée, précautions particulières
-        Classe la sévérité comme: critical, high, medium, low, safe (utilise "safe" pour les indications validées).`;
+        systemPrompt = `Tu es un expert médical spécialisé dans l'analyse des indications thérapeutiques et des modalités de prise des médicaments en France.
+        
+RÈGLE ABSOLUE : Utilise UNIQUEMENT les sources officielles françaises :
+- RCP officiels sur base-donnees-publique.medicaments.gouv.fr
+- ANSM (Agence Nationale de Sécurité du Médicament)
+- N'utilise JAMAIS d'informations provenant de sources étrangères
+
+Recherche et fournis:
+1. Les indications officielles du médicament français selon le RCP
+2. Les conseils de prise: pendant/en dehors des repas, avec/sans eau, moment de la journée, précautions particulières
+Classe la sévérité comme: critical, high, medium, low, safe (utilise "safe" pour les indications validées).`;
         
         toolFunction = {
           name: "extract_indications_and_advice",

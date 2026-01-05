@@ -20,9 +20,15 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const systemPrompt = `Tu es un expert pharmacologue spécialisé dans les interactions médicamenteuses.
-    Recherche et analyse les interactions officielles entre deux médicaments selon le Thésaurus ANSM des interactions médicamenteuses.
-    Classe la sévérité comme: critical (CI absolue), high (association déconseillée), medium (précaution d'emploi), low (à prendre en compte), safe (pas d'interaction connue).`;
+    const systemPrompt = `Tu es un expert pharmacologue français spécialisé dans les interactions médicamenteuses.
+    
+RÈGLE ABSOLUE : Utilise UNIQUEMENT les sources officielles françaises :
+- Thésaurus ANSM des interactions médicamenteuses (source principale et obligatoire)
+- RCP officiels sur base-donnees-publique.medicaments.gouv.fr
+- N'utilise JAMAIS d'informations provenant de sources étrangères (FDA, interactions américaines, etc.)
+
+Analyse les interactions entre deux médicaments français selon le Thésaurus ANSM.
+Classe la sévérité comme: critical (CI absolue), high (association déconseillée), medium (précaution d'emploi), low (à prendre en compte), safe (pas d'interaction connue).`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
