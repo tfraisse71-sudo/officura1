@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Search, AlertCircle, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -21,6 +21,11 @@ export const MedicationSearch = () => {
   const [aiSuggestions2, setAiSuggestions2] = useState<string[]>([]);
   const [isLoadingAi1, setIsLoadingAi1] = useState(false);
   const [isLoadingAi2, setIsLoadingAi2] = useState(false);
+  const [highlightedIndex1, setHighlightedIndex1] = useState(-1);
+  const [highlightedIndex2, setHighlightedIndex2] = useState(-1);
+  
+  const input1Ref = useRef<HTMLInputElement>(null);
+  const input2Ref = useRef<HTMLInputElement>(null);
 
   const medications = useMedicationData();
 
@@ -51,6 +56,15 @@ export const MedicationSearch = () => {
     const combined = [...localResults, ...aiSuggestions2.filter(ai => !localResults.includes(ai))];
     return combined.slice(0, 10);
   }, [searchTerm2, medications, aiSuggestions2]);
+
+  // Reset highlighted index when suggestions change
+  useEffect(() => {
+    setHighlightedIndex1(-1);
+  }, [suggestions1]);
+
+  useEffect(() => {
+    setHighlightedIndex2(-1);
+  }, [suggestions2]);
 
   // Fetch AI suggestions when local results are insufficient
   useEffect(() => {
@@ -131,17 +145,59 @@ export const MedicationSearch = () => {
     setSelectedMed1(med);
     setSearchTerm1(med);
     setShowSuggestions1(false);
+    setHighlightedIndex1(-1);
   };
 
   const handleSelectMed2 = (med: string) => {
     setSelectedMed2(med);
     setSearchTerm2(med);
     setShowSuggestions2(false);
+    setHighlightedIndex2(-1);
+  };
+
+  const handleKeyDown1 = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions1 || suggestions1.length === 0) return;
+    
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightedIndex1(prev => (prev < suggestions1.length - 1 ? prev + 1 : 0));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightedIndex1(prev => (prev > 0 ? prev - 1 : suggestions1.length - 1));
+    } else if (e.key === "Enter" && highlightedIndex1 >= 0) {
+      e.preventDefault();
+      handleSelectMed1(suggestions1[highlightedIndex1]);
+    } else if (e.key === "Escape") {
+      setShowSuggestions1(false);
+      setHighlightedIndex1(-1);
+    }
+  };
+
+  const handleKeyDown2 = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions2 || suggestions2.length === 0) return;
+    
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightedIndex2(prev => (prev < suggestions2.length - 1 ? prev + 1 : 0));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightedIndex2(prev => (prev > 0 ? prev - 1 : suggestions2.length - 1));
+    } else if (e.key === "Enter" && highlightedIndex2 >= 0) {
+      e.preventDefault();
+      handleSelectMed2(suggestions2[highlightedIndex2]);
+    } else if (e.key === "Escape") {
+      setShowSuggestions2(false);
+      setHighlightedIndex2(-1);
+    }
+  };
+
+  const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.select();
   };
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <Card className="p-3 sm:p-4 md:p-6 border-border/50 shadow-lg bg-card/80 backdrop-blur-sm">
+      <Card className="p-3 sm:p-4 md:p-6 border-border/50 shadow-lg bg-card/80 backdrop-blur-sm relative z-20">
         <div className="space-y-3 sm:space-y-4">
           <div className="relative">
             <label htmlFor="med1" className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">
@@ -150,6 +206,7 @@ export const MedicationSearch = () => {
             <div className="relative">
               <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
               <Input
+                ref={input1Ref}
                 id="med1"
                 type="text"
                 placeholder="Ex : paracétamol, Doliprane..."
@@ -160,16 +217,20 @@ export const MedicationSearch = () => {
                   setShowSuggestions1(true);
                 }}
                 onFocus={() => setShowSuggestions1(true)}
+                onClick={handleInputClick}
+                onKeyDown={handleKeyDown1}
                 className="pl-8 sm:pl-10 text-sm"
               />
             </div>
             {showSuggestions1 && suggestions1.length > 0 && (
-              <Card className="absolute z-50 w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card backdrop-blur-none shadow-lg">
+              <Card className="absolute z-[100] w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card shadow-lg">
                 {suggestions1.map((med, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSelectMed1(med)}
-                    className="w-full text-left px-3 sm:px-4 py-2.5 hover:bg-primary/20 hover:text-primary transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0"
+                    className={`w-full text-left px-3 sm:px-4 py-2.5 hover:bg-primary/20 hover:text-primary transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0 ${
+                      idx === highlightedIndex1 ? "bg-primary/20 text-primary" : ""
+                    }`}
                   >
                     {med}
                   </button>
@@ -197,6 +258,7 @@ export const MedicationSearch = () => {
               <div className="relative">
                 <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
                 <Input
+                  ref={input2Ref}
                   id="med2"
                   type="text"
                   placeholder="Ex : warfarine, aspirine..."
@@ -207,16 +269,20 @@ export const MedicationSearch = () => {
                     setShowSuggestions2(true);
                   }}
                   onFocus={() => setShowSuggestions2(true)}
+                  onClick={handleInputClick}
+                  onKeyDown={handleKeyDown2}
                   className="pl-8 sm:pl-10 text-sm"
                 />
               </div>
               {showSuggestions2 && suggestions2.length > 0 && (
-                <Card className="absolute z-50 w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card backdrop-blur-none shadow-lg">
+                <Card className="absolute z-[100] w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card shadow-lg">
                   {suggestions2.map((med, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleSelectMed2(med)}
-                      className="w-full text-left px-3 sm:px-4 py-2.5 hover:bg-primary/20 hover:text-primary transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0"
+                      className={`w-full text-left px-3 sm:px-4 py-2.5 hover:bg-primary/20 hover:text-primary transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0 ${
+                        idx === highlightedIndex2 ? "bg-primary/20 text-primary" : ""
+                      }`}
                     >
                       {med}
                     </button>
@@ -240,7 +306,7 @@ export const MedicationSearch = () => {
         />
       )}
 
-      <Card className="p-4 bg-secondary/30 border-border/50 backdrop-blur-sm">
+      <Card className="p-4 bg-secondary/30 border-border/50 backdrop-blur-sm relative z-0">
         <div className="flex items-start gap-3">
           <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
           <div className="text-sm text-muted-foreground">
