@@ -15,12 +15,12 @@ const Index = () => {
       
       {/* Header */}
       <header className="border-b border-border/50 glass sticky top-0 z-40 shadow-lg">
-        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <img src={logo} alt="MediSafe" className="h-8 sm:h-10 md:h-12 w-auto drop-shadow-lg" />
+            <div className="flex items-center flex-1">
+              <img src={logo} alt="MediSafe" className="h-10 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[70%] sm:max-w-[60%] object-contain drop-shadow-[0_0_15px_rgba(0,240,255,0.5)]" />
             </div>
-            <div className="text-right">
+            <div className="text-right flex-shrink-0">
               <p className="text-[10px] sm:text-xs text-muted-foreground">Version 1.0</p>
               <p className="text-[10px] sm:text-xs text-muted-foreground hidden sm:inline">MAJ : {new Date().toLocaleDateString('fr-FR')}</p>
             </div>
