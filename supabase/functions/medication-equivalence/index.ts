@@ -25,7 +25,7 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const systemPrompt = `Tu es un expert en pharmacologie française. Tu recherches TOUTES les équivalences d'un médicament basées sur la MÊME MOLÉCULE et le MÊME DOSAGE.
+const systemPrompt = `Tu es un expert en pharmacologie française. Tu recherches TOUTES les équivalences d'un médicament basées sur la MÊME MOLÉCULE et le MÊME DOSAGE, PLUS les alternatives par indication.
 
 RÈGLE CRITIQUE - VÉRIFICATION DES DOSAGES :
 Tu dois UNIQUEMENT mentionner des médicaments avec des DOSAGES QUI EXISTENT RÉELLEMENT sur le marché français.
@@ -55,7 +55,7 @@ SOURCES OBLIGATOIRES (France uniquement) :
 - Répertoire des génériques de l'ANSM
 - N'inclus JAMAIS de médicaments non vérifiés
 
-CRITÈRES D'ÉQUIVALENCE :
+CRITÈRES D'ÉQUIVALENCE STRICTE (même molécule) :
 - MÊME molécule active (DCI identique) - obligatoire
 - MÊME dosage EXACT - obligatoire  
 - La forme galénique peut être différente
@@ -66,7 +66,25 @@ POUR LES GÉNÉRIQUES :
 
 POUR LES SPÉCIALITÉS DE MARQUE :
 - Liste UNIQUEMENT les spécialités dont tu es CERTAIN qu'elles existent avec ce dosage exact
-- En cas de doute sur l'existence d'un produit, NE PAS l'inclure`;
+- En cas de doute sur l'existence d'un produit, NE PAS l'inclure
+
+ÉQUIVALENTS PAR INDICATION (NOUVEAU ET IMPORTANT) :
+Cette section est pour les produits de PARAPHARMACIE ayant la même indication thérapeutique :
+- Dispositifs médicaux (DM)
+- Compléments alimentaires
+- Produits cosmétiques/dermo-cosmétiques à visée thérapeutique
+- Produits homéopathiques
+
+EXEMPLES D'ÉQUIVALENTS PAR INDICATION :
+- BRONCHOKOD (médicament) → EXOMUC (médicament) : même indication (toux grasse) mais molécules différentes
+- RHINADVIL (médicament) → HUMEX RHUME (médicament) : même indication (rhume)
+- Pour un sirop contre la toux : proposer des dispositifs médicaux comme TOPLEXIL ou des compléments
+
+RÈGLES POUR LES ÉQUIVALENTS PAR INDICATION :
+1. Ils doivent avoir la MÊME indication thérapeutique principale
+2. Préciser le TYPE de produit (Médicament, Dispositif médical, Complément alimentaire, etc.)
+3. Expliquer brièvement pourquoi c'est une alternative valable
+4. NE PAS confondre avec les équivalences strictes (même molécule)`;
 
 
 
@@ -114,6 +132,21 @@ POUR LES SPÉCIALITÉS DE MARQUE :
               },
               description: "TOUTES les spécialités de marque avec même molécule et même dosage (toutes formes)"
             },
+            indicationEquivalents: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string", description: "Nom du produit" },
+                  productType: { type: "string", description: "Type: Médicament, Dispositif médical, Complément alimentaire, Homéopathie" },
+                  indication: { type: "string", description: "Indication thérapeutique commune" },
+                  activePrinciple: { type: "string", description: "Principe actif ou composant principal" },
+                  note: { type: "string", description: "Pourquoi c'est une alternative valable" }
+                },
+                required: ["name", "productType", "indication"]
+              },
+              description: "Produits ayant la même indication thérapeutique mais molécule différente (médicaments, dispositifs médicaux, compléments alimentaires, parapharmacie)"
+            },
             excipientWarnings: {
               type: "array",
               items: { type: "string" },
@@ -129,7 +162,7 @@ POUR LES SPÉCIALITÉS DE MARQUE :
               description: "Conseil de substitution pour le pharmacien"
             }
           },
-          required: ["medicationAnalysis", "generics", "brandEquivalents", "excipientWarnings", "summary", "substitutionAdvice"]
+          required: ["medicationAnalysis", "generics", "brandEquivalents", "indicationEquivalents", "excipientWarnings", "summary", "substitutionAdvice"]
         }
       }
     };

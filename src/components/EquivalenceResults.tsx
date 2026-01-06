@@ -1,4 +1,4 @@
-import { ExternalLink, Clock, Loader2, Pill, Building2, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { ExternalLink, Clock, Loader2, Pill, Building2, AlertTriangle, CheckCircle2, Package, Leaf } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,10 +30,19 @@ interface EquivalentMed {
   note?: string;
 }
 
+interface IndicationEquivalent {
+  name: string;
+  productType: string;
+  indication: string;
+  activePrinciple?: string;
+  note?: string;
+}
+
 interface EquivalenceData {
   medicationAnalysis: MedicationAnalysis;
   generics: GenericMed[];
   brandEquivalents: EquivalentMed[];
+  indicationEquivalents?: IndicationEquivalent[];
   excipientWarnings: string[];
   summary: string[];
   substitutionAdvice: string;
@@ -198,6 +207,62 @@ export const EquivalenceResults = ({ medication }: EquivalenceResultsProps) => {
                             {brand.note}
                           </p>
                         )}
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
+
+          {/* Indication Equivalents - Parapharmacy alternatives */}
+          {data.indicationEquivalents && data.indicationEquivalents.length > 0 && (
+            <Accordion type="single" collapsible defaultValue="indication">
+              <AccordionItem value="indication" className="border-none">
+                <AccordionTrigger className="text-left text-sm sm:text-base hover:no-underline py-3 px-4 bg-emerald-500/10 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Package className="h-4 w-4 text-emerald-500" />
+                    <span>Équivalents par indication ({data.indicationEquivalents.length})</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="pt-3">
+                  <p className="text-xs text-muted-foreground mb-3 italic">
+                    Produits avec la même indication thérapeutique mais une composition différente (médicaments, dispositifs médicaux, compléments alimentaires, parapharmacie)
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {data.indicationEquivalents.map((equiv, idx) => (
+                      <div key={idx} className="bg-card border border-emerald-500/30 rounded-lg p-3 text-sm hover:border-emerald-500/50 transition-colors">
+                        <div className="space-y-1.5">
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="font-semibold text-foreground">{equiv.name}</p>
+                            <Badge 
+                              variant="outline" 
+                              className={`text-[10px] font-normal shrink-0 ${
+                                equiv.productType === 'Dispositif médical' ? 'border-blue-500 text-blue-500' :
+                                equiv.productType === 'Complément alimentaire' ? 'border-green-500 text-green-500' :
+                                equiv.productType === 'Homéopathie' ? 'border-purple-500 text-purple-500' :
+                                'border-primary text-primary'
+                              }`}
+                            >
+                              {equiv.productType === 'Dispositif médical' && <Package className="h-2.5 w-2.5 mr-1" />}
+                              {equiv.productType === 'Complément alimentaire' && <Leaf className="h-2.5 w-2.5 mr-1" />}
+                              {equiv.productType}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-medium">Indication : </span>{equiv.indication}
+                          </p>
+                          {equiv.activePrinciple && (
+                            <p className="text-xs text-muted-foreground">
+                              <span className="font-medium">Composant : </span>{equiv.activePrinciple}
+                            </p>
+                          )}
+                          {equiv.note && (
+                            <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 italic">
+                              {equiv.note}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
