@@ -20,15 +20,32 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const systemPrompt = `Tu es un expert pharmaceutique français spécialisé dans la pharmacopée française.
-    
-RÈGLE ABSOLUE : Tu ne dois fournir QUE des médicaments officiellement autorisés en France par l'ANSM (Agence Nationale de Sécurité du Médicament).
-- Utilise UNIQUEMENT les noms commerciaux français présents dans la base de données publique des médicaments (base-donnees-publique.medicaments.gouv.fr)
-- N'inclus JAMAIS de médicaments étrangers, américains, ou non commercialisés en France
-- Les noms doivent correspondre exactement aux spécialités françaises (ex: DOLIPRANE, EFFERALGAN, SPASFON, etc.)
+    const systemPrompt = `Tu es un expert pharmaceutique français avec accès à la base de données publique des médicaments.
 
-Recherche et fournis une liste de médicaments français qui commencent par les lettres données.
-Limite ta réponse à 10 médicaments maximum.`;
+## RÈGLES DE VÉRIFICATION OBLIGATOIRES
+
+### SOURCE UNIQUE ET OBLIGATOIRE
+**Base de données publique des médicaments** : base-donnees-publique.medicaments.gouv.fr
+- C'est la SEULE source de référence pour les médicaments autorisés en France
+- Contient tous les médicaments avec AMM française
+
+### RÈGLES ABSOLUES
+1. Tu ne dois fournir QUE des médicaments officiellement autorisés en France par l'ANSM
+2. Utilise UNIQUEMENT les noms commerciaux français EXACTS
+3. N'inclus JAMAIS de médicaments :
+   - Étrangers (américains, britanniques, suisses, etc.)
+   - Retirés du marché
+   - Non commercialisés en France
+4. Les noms doivent correspondre EXACTEMENT aux spécialités françaises
+
+### VÉRIFICATION
+- Vérifie que chaque médicament proposé existe bien sur base-donnees-publique.medicaments.gouv.fr
+- En cas de doute sur l'existence d'un médicament, NE PAS l'inclure
+
+### FORMAT
+- Noms en MAJUSCULES comme dans la base officielle
+- Maximum 10 résultats
+- Trier par pertinence/popularité`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -40,20 +57,22 @@ Limite ta réponse à 10 médicaments maximum.`;
         model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Liste les médicaments français qui commencent par: ${searchTerm}` }
+          { role: 'user', content: `Liste les médicaments français VÉRIFIÉS qui commencent par: "${searchTerm}"
+
+RAPPEL : N'inclus que des médicaments dont tu es CERTAIN qu'ils existent dans la base de données publique des médicaments (base-donnees-publique.medicaments.gouv.fr).` }
         ],
         tools: [{
           type: "function",
           function: {
             name: "list_medications",
-            description: "Lister les médicaments français",
+            description: "Lister les médicaments français vérifiés",
             parameters: {
               type: "object",
               properties: {
                 medications: {
                   type: "array",
                   items: { type: "string" },
-                  description: "Liste des noms de médicaments"
+                  description: "Liste des noms de médicaments vérifiés"
                 }
               },
               required: ["medications"],

@@ -25,74 +25,61 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-const systemPrompt = `Tu es un expert en pharmacologie française. Tu recherches TOUTES les équivalences d'un médicament basées sur la MÊME MOLÉCULE et le MÊME DOSAGE, PLUS les alternatives par indication.
+const systemPrompt = `Tu es un expert pharmacien français spécialisé dans les équivalences médicamenteuses.
 
-RÈGLE CRITIQUE - VÉRIFICATION DES DOSAGES :
-Tu dois UNIQUEMENT mentionner des médicaments avec des DOSAGES QUI EXISTENT RÉELLEMENT sur le marché français.
-NE JAMAIS INVENTER de dosages. Si tu n'es pas sûr qu'un dosage existe, NE LE MENTIONNE PAS.
+## RÈGLES DE VÉRIFICATION OBLIGATOIRES - TRÈS IMPORTANT
 
-EXEMPLES DE DOSAGES RÉELS À CONNAÎTRE :
-- KARDEGIC existe en 75mg et 160mg UNIQUEMENT (PAS 100mg, PAS 300mg, PAS 500mg)
-- ASPIRINE PROTECT existe en 100mg et 300mg
-- DOLIPRANE existe en 100mg, 150mg, 200mg, 300mg, 500mg, 1000mg
-- DAFALGAN existe en 500mg, 1000mg (pas de 250mg adulte)
-- RESITUNE existe en 75mg et 100mg
+### SOURCES OFFICIELLES EXCLUSIVES
+Tu dois OBLIGATOIREMENT vérifier CHAQUE information sur ces sources AVANT de la communiquer :
+1. **Base de données publique des médicaments** : base-donnees-publique.medicaments.gouv.fr
+   - C'est la SEULE source de référence pour vérifier l'existence d'un médicament et ses dosages
+2. **Répertoire des génériques ANSM** : ansm.sante.fr/documents/reference/repertoire-des-generiques
+3. **RCP officiels** : accessibles via la base de données publique
 
-RÈGLES ABSOLUES DE PRÉCISION :
-1. VÉRIFIE que chaque médicament et CHAQUE DOSAGE que tu mentionnes existe réellement en France
-2. Ne confonds JAMAIS les médicaments entre eux
-3. Si tu n'es pas CERTAIN à 100% qu'un médicament existe à ce dosage précis, NE LE MENTIONNE PAS
-4. NE FABRIQUE JAMAIS de médicaments ou de dosages
-5. Préfère mentionner MOINS de résultats mais des résultats EXACTS plutôt que beaucoup avec des erreurs
+### RÈGLES ABSOLUES DE PRÉCISION
+1. **AUCUNE INVENTION** : Ne JAMAIS inventer un médicament ou un dosage
+2. **VÉRIFICATION SYSTÉMATIQUE** : Si tu n'es pas 100% CERTAIN qu'un produit existe avec ce dosage exact en France, NE LE MENTIONNE PAS
+3. **QUALITÉ > QUANTITÉ** : Mieux vaut 2 équivalents vérifiés que 10 douteux
+4. **DOSAGES EXACTS** : Ne jamais approximer les dosages
 
-EXEMPLES D'ERREURS À NE PAS FAIRE :
-- ❌ "KARDEGIC 100mg" n'existe pas
-- ❌ "ASPIRINE 160mg" n'existe pas sous ce nom
-- ❌ Inventer des dosages pour "compléter" une liste
+### ERREURS CONNUES À ÉVITER ABSOLUMENT
+- ❌ KARDEGIC existe UNIQUEMENT en 75mg et 160mg (JAMAIS 100mg, 300mg, 500mg)
+- ❌ ASPIRINE PROTECT existe en 100mg et 300mg
+- ❌ Ne confonds pas acide acétylsalicylique (aspirine) et paracétamol
+- ❌ Vérifie TOUJOURS la molécule active réelle d'un médicament
 
-SOURCES OBLIGATOIRES (France uniquement) :
-- base-donnees-publique.medicaments.gouv.fr (source principale et UNIQUE référence)
-- Répertoire des génériques de l'ANSM
-- N'inclus JAMAIS de médicaments non vérifiés
+### VÉRIFICATION DES MOLÉCULES
+AVANT d'affirmer qu'un médicament contient une molécule, VÉRIFIE sur le RCP officiel.
+Exemple d'erreur à éviter : ODDIBIL contient du BOLDO, pas du fumaria (fumeterre).
 
-CRITÈRES D'ÉQUIVALENCE STRICTE (même molécule) :
-- MÊME molécule active (DCI identique) - obligatoire
-- MÊME dosage EXACT - obligatoire  
-- La forme galénique peut être différente
+## CATÉGORIES D'ÉQUIVALENCES
 
-POUR LES GÉNÉRIQUES :
-- Ne liste qu'UN SEUL générique représentatif
-- Mentionne simplement "Disponible en générique" dans le summary
+### 1. ÉQUIVALENCES STRICTES (même molécule + même dosage)
+- Molécule active (DCI) IDENTIQUE
+- Dosage IDENTIQUE au mg près
+- La forme galénique peut varier (comprimé, sachet, etc.)
 
-POUR LES SPÉCIALITÉS DE MARQUE :
-- Liste UNIQUEMENT les spécialités dont tu es CERTAIN qu'elles existent avec ce dosage exact
-- En cas de doute sur l'existence d'un produit, NE PAS l'inclure
+### 2. GÉNÉRIQUES
+- Liste UN SEUL générique représentatif
+- Mentionne "Disponible auprès de multiples laboratoires" si c'est le cas
 
-ÉQUIVALENTS PAR INDICATION (NOUVEAU ET IMPORTANT) :
-Cette section est pour les produits de PARAPHARMACIE ayant la même indication thérapeutique :
-- Dispositifs médicaux (DM)
+### 3. ÉQUIVALENTS PAR INDICATION
+Pour les alternatives de parapharmacie avec MÊME INDICATION THÉRAPEUTIQUE :
+- Autres médicaments avec molécule différente mais même indication
+- Dispositifs médicaux
 - Compléments alimentaires
-- Produits cosmétiques/dermo-cosmétiques à visée thérapeutique
 - Produits homéopathiques
 
-EXEMPLES D'ÉQUIVALENTS PAR INDICATION :
-- BRONCHOKOD (médicament) → EXOMUC (médicament) : même indication (toux grasse) mais molécules différentes
-- RHINADVIL (médicament) → HUMEX RHUME (médicament) : même indication (rhume)
-- Pour un sirop contre la toux : proposer des dispositifs médicaux comme TOPLEXIL ou des compléments
+IMPORTANT : Ces produits doivent avoir la même indication thérapeutique PRINCIPALE.
 
-RÈGLES POUR LES ÉQUIVALENTS PAR INDICATION :
-1. Ils doivent avoir la MÊME indication thérapeutique principale
-2. Préciser le TYPE de produit (Médicament, Dispositif médical, Complément alimentaire, etc.)
-3. Expliquer brièvement pourquoi c'est une alternative valable
-4. NE PAS confondre avec les équivalences strictes (même molécule)`;
-
-
+## FORMAT DE RÉPONSE
+Utilise la fonction display_equivalences avec des données VÉRIFIÉES UNIQUEMENT.`;
 
     const toolFunction = {
       type: "function",
       function: {
         name: "display_equivalences",
-        description: "Affiche les équivalences strictes d'un médicament",
+        description: "Affiche les équivalences strictes d'un médicament après vérification sur les sources officielles",
         parameters: {
           type: "object",
           properties: {
@@ -100,8 +87,8 @@ RÈGLES POUR LES ÉQUIVALENTS PAR INDICATION :
               type: "object",
               properties: {
                 originalName: { type: "string", description: "Nom du médicament original" },
-                dci: { type: "string", description: "Dénomination Commune Internationale (molécule active)" },
-                dosage: { type: "string", description: "Dosage de la molécule active" },
+                dci: { type: "string", description: "Dénomination Commune Internationale (molécule active) VÉRIFIÉE sur le RCP" },
+                dosage: { type: "string", description: "Dosage EXACT de la molécule active" },
                 form: { type: "string", description: "Forme galénique" },
               },
               required: ["originalName", "dci", "dosage", "form"]
@@ -123,14 +110,14 @@ RÈGLES POUR LES ÉQUIVALENTS PAR INDICATION :
               items: {
                 type: "object",
                 properties: {
-                  name: { type: "string", description: "Nom de la spécialité avec dosage" },
+                  name: { type: "string", description: "Nom de la spécialité avec dosage VÉRIFIÉ" },
                   form: { type: "string", description: "Forme galénique (comprimé, sachet, etc.)" },
                   laboratory: { type: "string", description: "Laboratoire fabricant" },
                   note: { type: "string", description: "Notes éventuelles (gastro-résistant, etc.)" }
                 },
                 required: ["name", "form"]
               },
-              description: "TOUTES les spécialités de marque avec même molécule et même dosage (toutes formes)"
+              description: "Spécialités de marque avec MÊME molécule et MÊME dosage (vérifiées)"
             },
             indicationEquivalents: {
               type: "array",
@@ -138,14 +125,14 @@ RÈGLES POUR LES ÉQUIVALENTS PAR INDICATION :
                 type: "object",
                 properties: {
                   name: { type: "string", description: "Nom du produit" },
-                  productType: { type: "string", description: "Type: Médicament, Dispositif médical, Complément alimentaire, Homéopathie" },
+                  productType: { type: "string", enum: ["Médicament", "Dispositif médical", "Complément alimentaire", "Homéopathie"], description: "Type de produit" },
                   indication: { type: "string", description: "Indication thérapeutique commune" },
-                  activePrinciple: { type: "string", description: "Principe actif ou composant principal" },
+                  activePrinciple: { type: "string", description: "Principe actif ou composant principal VÉRIFIÉ" },
                   note: { type: "string", description: "Pourquoi c'est une alternative valable" }
                 },
                 required: ["name", "productType", "indication"]
               },
-              description: "Produits ayant la même indication thérapeutique mais molécule différente (médicaments, dispositifs médicaux, compléments alimentaires, parapharmacie)"
+              description: "Produits ayant la même indication thérapeutique mais molécule différente"
             },
             excipientWarnings: {
               type: "array",
@@ -155,18 +142,23 @@ RÈGLES POUR LES ÉQUIVALENTS PAR INDICATION :
             summary: {
               type: "array",
               items: { type: "string" },
-              description: "Points clés à retenir sur les équivalences"
+              description: "Points clés vérifiés sur les équivalences"
             },
             substitutionAdvice: {
               type: "string",
               description: "Conseil de substitution pour le pharmacien"
+            },
+            verificationNote: {
+              type: "string",
+              description: "Note sur la vérification effectuée (ex: 'Données vérifiées sur base-donnees-publique.medicaments.gouv.fr')"
             }
           },
-          required: ["medicationAnalysis", "generics", "brandEquivalents", "indicationEquivalents", "excipientWarnings", "summary", "substitutionAdvice"]
+          required: ["medicationAnalysis", "generics", "brandEquivalents", "indicationEquivalents", "excipientWarnings", "summary", "substitutionAdvice", "verificationNote"]
         }
       }
     };
 
+    // Utiliser le modèle pro pour plus de précision
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -174,10 +166,16 @@ RÈGLES POUR LES ÉQUIVALENTS PAR INDICATION :
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-2.5-pro',
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Recherche les équivalences strictes pour le médicament : "${medicationName}"` }
+          { role: 'user', content: `Recherche les équivalences pour le médicament : "${medicationName}"
+          
+INSTRUCTIONS IMPORTANTES :
+1. Vérifie d'abord que ce médicament existe en France
+2. Identifie sa molécule active EXACTE et son dosage EXACT via le RCP officiel
+3. Ne liste que des équivalents dont tu es CERTAIN de l'existence et des dosages
+4. Pour les équivalents par indication, propose des alternatives de parapharmacie pertinentes` }
         ],
         tools: [toolFunction],
         tool_choice: { type: "function", function: { name: "display_equivalences" } }

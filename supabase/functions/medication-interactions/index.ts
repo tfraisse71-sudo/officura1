@@ -21,14 +21,44 @@ serve(async (req) => {
     }
 
     const systemPrompt = `Tu es un expert pharmacologue français spécialisé dans les interactions médicamenteuses.
-    
-RÈGLE ABSOLUE : Utilise UNIQUEMENT les sources officielles françaises :
-- Thésaurus ANSM des interactions médicamenteuses (source principale et obligatoire)
-- RCP officiels sur base-donnees-publique.medicaments.gouv.fr
-- N'utilise JAMAIS d'informations provenant de sources étrangères (FDA, interactions américaines, etc.)
 
-Analyse les interactions entre deux médicaments français selon le Thésaurus ANSM.
-Classe la sévérité comme: critical (CI absolue), high (association déconseillée), medium (précaution d'emploi), low (à prendre en compte), safe (pas d'interaction connue).`;
+## RÈGLES DE VÉRIFICATION OBLIGATOIRES
+
+### SOURCE UNIQUE ET OBLIGATOIRE
+**Thésaurus ANSM des interactions médicamenteuses** (ansm.sante.fr)
+- C'est la SEULE référence officielle en France pour les interactions
+- Disponible en PDF sur le site de l'ANSM
+- Mis à jour régulièrement
+
+### CLASSIFICATION OFFICIELLE ANSM (à respecter strictement)
+1. **Contre-indication (critical)** : Association INTERDITE
+   - Risque majeur pour le patient
+   - Pas d'alternative possible dans l'association
+   
+2. **Association déconseillée (high)** : À ÉVITER
+   - Rapport bénéfice/risque défavorable
+   - Si indispensable, surveillance étroite
+
+3. **Précaution d'emploi (medium)** : POSSIBLE avec surveillance
+   - Association possible sous conditions
+   - Adaptation posologique ou surveillance biologique
+
+4. **À prendre en compte (low)** : INFORMATION
+   - Risque d'addition d'effets indésirables
+   - Pas de mesure particulière mais vigilance
+
+5. **Pas d'interaction connue (safe)** : Aucune interaction référencée
+
+### RÈGLES ABSOLUES
+- N'utilise JAMAIS de sources étrangères (FDA, interactions américaines, etc.)
+- Vérifie l'interaction par les DCI (molécules actives), pas les noms commerciaux
+- Cite le mécanisme d'interaction si connu
+- En cas de doute, classe en "medium" et recommande l'avis du pharmacien
+
+### FORMAT DE RÉPONSE
+- Toujours mentionner la classification ANSM exacte
+- Expliquer le mécanisme si connu
+- Proposer une conduite à tenir`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -37,30 +67,39 @@ Classe la sévérité comme: critical (CI absolue), high (association déconseil
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-2.5-pro',
         messages: [
           { role: 'system', content: systemPrompt },
           { 
             role: 'user', 
-            content: `Analyse les interactions entre ${medication1} et ${medication2}. Fournis des informations officielles basées sur le Thésaurus ANSM.` 
+            content: `Analyse les interactions entre "${medication1}" et "${medication2}".
+
+INSTRUCTIONS :
+1. Identifie les molécules actives (DCI) de chaque médicament
+2. Recherche l'interaction dans le Thésaurus ANSM
+3. Classe selon la classification officielle ANSM
+4. Explique le mécanisme et la conduite à tenir
+
+Si aucune interaction n'est référencée dans le Thésaurus ANSM, indique-le clairement.` 
           }
         ],
         tools: [{
           type: "function",
           function: {
             name: "extract_interactions",
-            description: "Extraire les interactions médicamenteuses",
+            description: "Extraire les interactions médicamenteuses selon le Thésaurus ANSM",
             parameters: {
               type: "object",
               properties: {
                 severity: {
                   type: "string",
-                  enum: ["critical", "high", "medium", "low", "safe"]
+                  enum: ["critical", "high", "medium", "low", "safe"],
+                  description: "Classification ANSM : critical=CI, high=Déconseillée, medium=Précaution, low=À prendre en compte, safe=Pas d'interaction"
                 },
                 summary: {
                   type: "array",
                   items: { type: "string" },
-                  description: "Points clés sur les interactions"
+                  description: "Points clés sur l'interaction (DCI concernées, classification ANSM, risque principal)"
                 },
                 details: {
                   type: "array",
@@ -71,7 +110,7 @@ Classe la sévérité comme: critical (CI absolue), high (association déconseil
                       content: { type: "string" }
                     }
                   },
-                  description: "Détails sur le mécanisme et la conduite à tenir"
+                  description: "Détails : mécanisme, conduite à tenir, alternatives si besoin"
                 }
               },
               required: ["severity", "summary", "details"],
