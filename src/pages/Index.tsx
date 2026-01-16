@@ -1,10 +1,11 @@
-import { Calculator, Syringe, Plane } from "lucide-react";
+import { Calculator, Syringe, Plane, TestTube } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { MedicationSearch } from "@/components/MedicationSearch";
 import { DosageSection } from "@/components/DosageSection";
 import { VaccinationSection } from "@/components/VaccinationSection";
 import { TravelSection } from "@/components/TravelSection";
+import { TestsOfficineSection } from "@/components/TestsOfficineSection";
 import logo from "@/assets/medisafe-logo.png";
 
 const Index = () => {
@@ -31,7 +32,7 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
         <Tabs defaultValue="medicament" className="space-y-4 sm:space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto gap-1.5 sm:gap-2 p-1.5 bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5 h-auto gap-1.5 sm:gap-2 p-1.5 bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl">
             <TabsTrigger value="medicament" className="gap-1 sm:gap-2 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all duration-300">
               Médicament
             </TabsTrigger>
@@ -46,6 +47,10 @@ const Index = () => {
             <TabsTrigger value="voyage" className="gap-1 sm:gap-2 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all duration-300">
               <Plane className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Prévention </span>Voyage
+            </TabsTrigger>
+            <TabsTrigger value="tests" className="gap-1 sm:gap-2 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-glow transition-all duration-300">
+              <TestTube className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Tests </span>Officine
             </TabsTrigger>
           </TabsList>
 
@@ -87,6 +92,16 @@ const Index = () => {
               </p>
             </div>
             <TravelSection />
+          </TabsContent>
+
+          <TabsContent value="tests" className="space-y-3 sm:space-y-4">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-semibold mb-1.5 sm:mb-2">Tests en officine</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Vérifiez les critères réglementaires avant de pratiquer un test au comptoir.
+              </p>
+            </div>
+            <TestsOfficineSection />
           </TabsContent>
         </Tabs>
       </main>
