@@ -240,12 +240,13 @@ export const MedicationSearch = () => {
           </div>
 
           <Tabs value={selectedMode} onValueChange={setSelectedMode} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-1 sm:gap-1.5 h-auto p-1 bg-secondary/50 backdrop-blur-sm rounded-lg">
+            <TabsList className="grid w-full grid-cols-4 sm:grid-cols-4 lg:grid-cols-7 gap-1 sm:gap-1.5 h-auto p-1 bg-secondary/50 backdrop-blur-sm rounded-lg">
               <TabsTrigger value="indications-conseils" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Indications</TabsTrigger>
               <TabsTrigger value="contre-indications" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Contre-ind.</TabsTrigger>
               <TabsTrigger value="grossesse" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Grossesse</TabsTrigger>
               <TabsTrigger value="allaitement" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Allaitement</TabsTrigger>
               <TabsTrigger value="interactions" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Interactions</TabsTrigger>
+              <TabsTrigger value="phytotherapie" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Phyto</TabsTrigger>
               <TabsTrigger value="equivalence" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Équivalence</TabsTrigger>
             </TabsList>
           </Tabs>
@@ -289,6 +290,29 @@ export const MedicationSearch = () => {
                   ))}
                 </Card>
               )}
+            </div>
+          )}
+
+          {selectedMode === "phytotherapie" && (
+            <div className="relative">
+              <label htmlFor="plant" className="block text-xs sm:text-sm font-medium mb-2">
+                Plante / Phytothérapie
+              </label>
+              <div className="relative">
+                <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+                <Input
+                  id="plant"
+                  type="text"
+                  placeholder="Ex : millepertuis, ginkgo, valériane..."
+                  value={searchTerm2}
+                  onChange={(e) => {
+                    setSearchTerm2(e.target.value);
+                    setSelectedMed2(null);
+                  }}
+                  onClick={handleInputClick}
+                  className="pl-8 sm:pl-10 text-sm"
+                />
+              </div>
             </div>
           )}
         </div>

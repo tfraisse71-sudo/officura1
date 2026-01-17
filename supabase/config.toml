@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.medication-equivalence]
 verify_jwt = false
+
+[functions.phytotherapy-interactions]
+verify_jwt = false

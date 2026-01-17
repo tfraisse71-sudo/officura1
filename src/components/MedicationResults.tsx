@@ -36,7 +36,24 @@ export const MedicationResults = ({ medication1, medication2, mode }: Medication
               { name: "Thesaurus ANSM", url: "https://ansm.sante.fr/thesaurus" },
             ]
           });
-        } else if (mode !== "interactions") {
+        } else if (mode === "phytotherapie" && medication2) {
+          const { data: result, error } = await supabase.functions.invoke('phytotherapy-interactions', {
+            body: { medication: medication1, plant: medication2 }
+          });
+
+          if (error) throw error;
+          
+          setData({
+            ...result,
+            title: `Interactions ${medication1} × ${medication2}`,
+            sources: [
+              { name: "ANSM", url: "https://base-donnees-publique.medicaments.gouv.fr" },
+              { name: "Thésaurus ANSM", url: "https://ansm.sante.fr/thesaurus" },
+              { name: "ANSES Plantes", url: "https://www.anses.fr" },
+              { name: "HEDRINE", url: "https://hedrine.univ-grenoble-alpes.fr" },
+            ]
+          });
+        } else if (mode !== "interactions" && mode !== "phytotherapie") {
           const { data: result, error } = await supabase.functions.invoke('medication-info', {
             body: { medicationName: medication1, mode }
           });
@@ -137,6 +154,16 @@ export const MedicationResults = ({ medication1, medication2, mode }: Medication
       <Card className="p-4 sm:p-6 md:p-8 text-center border-muted">
         <p className="text-sm sm:text-base text-muted-foreground">
           Veuillez sélectionner un deuxième médicament pour vérifier les interactions.
+        </p>
+      </Card>
+    );
+  }
+
+  if (mode === "phytotherapie" && !medication2) {
+    return (
+      <Card className="p-4 sm:p-6 md:p-8 text-center border-muted">
+        <p className="text-sm sm:text-base text-muted-foreground">
+          Veuillez saisir une plante ou un produit de phytothérapie pour vérifier les interactions.
         </p>
       </Card>
     );
