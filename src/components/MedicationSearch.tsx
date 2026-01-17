@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { Search, AlertCircle, Info } from "lucide-react";
+import { Search, AlertCircle, Info, Leaf, Pill } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ export const MedicationSearch = () => {
   const [searchTerm1, setSearchTerm1] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
   const [selectedMode, setSelectedMode] = useState("indications-conseils");
+  const [interactionType, setInteractionType] = useState<"medication" | "phytotherapy">("medication");
   const [showSuggestions1, setShowSuggestions1] = useState(false);
   const [showSuggestions2, setShowSuggestions2] = useState(false);
   const [selectedMed1, setSelectedMed1] = useState<string | null>(null);
@@ -239,79 +240,108 @@ export const MedicationSearch = () => {
             )}
           </div>
 
-          <Tabs value={selectedMode} onValueChange={setSelectedMode} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 sm:grid-cols-4 lg:grid-cols-7 gap-1 sm:gap-1.5 h-auto p-1 bg-secondary/50 backdrop-blur-sm rounded-lg">
+          <Tabs value={selectedMode} onValueChange={(value) => {
+            setSelectedMode(value);
+            // Reset search term 2 when changing mode
+            if (value !== "interactions") {
+              setSearchTerm2("");
+              setSelectedMed2(null);
+            }
+          }} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-1 sm:gap-1.5 h-auto p-1 bg-secondary/50 backdrop-blur-sm rounded-lg">
               <TabsTrigger value="indications-conseils" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Indications</TabsTrigger>
               <TabsTrigger value="contre-indications" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Contre-ind.</TabsTrigger>
               <TabsTrigger value="grossesse" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Grossesse</TabsTrigger>
               <TabsTrigger value="allaitement" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Allaitement</TabsTrigger>
               <TabsTrigger value="interactions" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Interactions</TabsTrigger>
-              <TabsTrigger value="phytotherapie" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Phyto</TabsTrigger>
               <TabsTrigger value="equivalence" className="text-[10px] sm:text-xs py-2 sm:py-2.5 px-1 sm:px-3 rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground transition-all duration-200">Équivalence</TabsTrigger>
             </TabsList>
           </Tabs>
 
           {selectedMode === "interactions" && (
-            <div className="relative">
-              <label htmlFor="med2" className="block text-xs sm:text-sm font-medium mb-2">
-                Deuxième médicament
-              </label>
-              <div className="relative">
-                <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-                <Input
-                  ref={input2Ref}
-                  id="med2"
-                  type="text"
-                  placeholder="Ex : warfarine, aspirine..."
-                  value={searchTerm2}
-                  onChange={(e) => {
-                    setSearchTerm2(e.target.value);
+            <div className="space-y-3">
+              {/* Toggle between medication and phytotherapy */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setInteractionType("medication");
+                    setSearchTerm2("");
                     setSelectedMed2(null);
-                    setShowSuggestions2(true);
                   }}
-                  onFocus={() => setShowSuggestions2(true)}
-                  onClick={handleInputClick}
-                  onKeyDown={handleKeyDown2}
-                  className="pl-8 sm:pl-10 text-sm"
-                />
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border transition-all duration-200 text-xs sm:text-sm ${
+                    interactionType === "medication"
+                      ? "bg-primary/20 border-primary text-primary"
+                      : "bg-secondary/30 border-border/50 text-muted-foreground hover:bg-secondary/50"
+                  }`}
+                >
+                  <Pill className="h-4 w-4" />
+                  <span>Médicament</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setInteractionType("phytotherapy");
+                    setSearchTerm2("");
+                    setSelectedMed2(null);
+                  }}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border transition-all duration-200 text-xs sm:text-sm ${
+                    interactionType === "phytotherapy"
+                      ? "bg-green-500/20 border-green-500 text-green-400"
+                      : "bg-secondary/30 border-border/50 text-muted-foreground hover:bg-secondary/50"
+                  }`}
+                >
+                  <Leaf className="h-4 w-4" />
+                  <span>Phytothérapie</span>
+                </button>
               </div>
-              {showSuggestions2 && suggestions2.length > 0 && (
-                <Card className="absolute z-[100] w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card shadow-lg">
-                  {suggestions2.map((med, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleSelectMed2(med)}
-                      className={`w-full text-left px-3 sm:px-4 py-2.5 hover:bg-primary/20 hover:text-primary transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0 ${
-                        idx === highlightedIndex2 ? "bg-primary/20 text-primary" : ""
-                      }`}
-                    >
-                      {med}
-                    </button>
-                  ))}
-                </Card>
-              )}
-            </div>
-          )}
 
-          {selectedMode === "phytotherapie" && (
-            <div className="relative">
-              <label htmlFor="plant" className="block text-xs sm:text-sm font-medium mb-2">
-                Plante / Phytothérapie
-              </label>
+              {/* Second input field */}
               <div className="relative">
-                <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-                <Input
-                  id="plant"
-                  type="text"
-                  placeholder="Ex : millepertuis, ginkgo, valériane..."
-                  value={searchTerm2}
-                  onChange={(e) => {
-                    setSearchTerm2(e.target.value);
-                    setSelectedMed2(null);
-                  }}
-                  onClick={handleInputClick}
-                  className="pl-8 sm:pl-10 text-sm"
-                />
+                <label htmlFor="med2" className="block text-xs sm:text-sm font-medium mb-2">
+                  {interactionType === "medication" ? "Deuxième médicament" : "Plante / Phytothérapie"}
+                </label>
+                <div className="relative">
+                  <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+                  <Input
+                    ref={input2Ref}
+                    id="med2"
+                    type="text"
+                    placeholder={interactionType === "medication" 
+                      ? "Ex : warfarine, aspirine..." 
+                      : "Ex : millepertuis, ginkgo, valériane..."
+                    }
+                    value={searchTerm2}
+                    onChange={(e) => {
+                      setSearchTerm2(e.target.value);
+                      setSelectedMed2(null);
+                      if (interactionType === "medication") {
+                        setShowSuggestions2(true);
+                      }
+                    }}
+                    onFocus={() => {
+                      if (interactionType === "medication") {
+                        setShowSuggestions2(true);
+                      }
+                    }}
+                    onClick={handleInputClick}
+                    onKeyDown={interactionType === "medication" ? handleKeyDown2 : undefined}
+                    className="pl-8 sm:pl-10 text-sm"
+                  />
+                </div>
+                {interactionType === "medication" && showSuggestions2 && suggestions2.length > 0 && (
+                  <Card className="absolute z-[100] w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card shadow-lg">
+                    {suggestions2.map((med, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleSelectMed2(med)}
+                        className={`w-full text-left px-3 sm:px-4 py-2.5 hover:bg-primary/20 hover:text-primary transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0 ${
+                          idx === highlightedIndex2 ? "bg-primary/20 text-primary" : ""
+                        }`}
+                      >
+                        {med}
+                      </button>
+                    ))}
+                  </Card>
+                )}
               </div>
             </div>
           )}
@@ -325,8 +355,8 @@ export const MedicationSearch = () => {
       {selectedMed1 && selectedMode !== "equivalence" && (
         <MedicationResults
           medication1={selectedMed1}
-          medication2={selectedMode === "interactions" ? selectedMed2 : null}
-          mode={selectedMode}
+          medication2={selectedMode === "interactions" ? (interactionType === "phytotherapy" ? searchTerm2 : selectedMed2) : null}
+          mode={selectedMode === "interactions" && interactionType === "phytotherapy" ? "phytotherapie" : selectedMode}
         />
       )}
 
