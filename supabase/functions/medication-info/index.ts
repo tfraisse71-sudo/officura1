@@ -261,7 +261,7 @@ Recherche les INDICATIONS OFFICIELLES et les CONSEILS DE PRISE du médicament se
         throw new Error(`Mode non supporté: ${mode}`);
     }
 
-    // Utiliser le modèle pro pour plus de précision
+    // Utiliser le modèle flash pour des réponses rapides
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -269,7 +269,7 @@ Recherche les INDICATIONS OFFICIELLES et les CONSEILS DE PRISE du médicament se
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-pro',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Fournis les informations officielles VÉRIFIÉES pour le médicament français: ${medicationName}

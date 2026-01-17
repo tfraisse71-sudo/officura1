@@ -158,7 +158,7 @@ Utilise la fonction display_equivalences avec des données VÉRIFIÉES UNIQUEMEN
       }
     };
 
-    // Utiliser le modèle pro pour plus de précision
+    // Utiliser le modèle flash pour des réponses rapides
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -166,7 +166,7 @@ Utilise la fonction display_equivalences avec des données VÉRIFIÉES UNIQUEMEN
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-pro',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Recherche les équivalences pour le médicament : "${medicationName}"

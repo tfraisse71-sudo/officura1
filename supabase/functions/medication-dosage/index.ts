@@ -51,6 +51,7 @@ Pour chaque tranche d'âge/poids, fournir :
 - Mentionner les adaptations pour insuffisance rénale/hépatique si applicable
 - Signaler les contre-indications d'âge (ex: aspirine < 16 ans)`;
 
+    // Utiliser le modèle flash pour des réponses rapides
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -58,7 +59,7 @@ Pour chaque tranche d'âge/poids, fournir :
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-pro',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Fournis les posologies officielles VÉRIFIÉES du RCP pour le médicament français: ${medicationName}
