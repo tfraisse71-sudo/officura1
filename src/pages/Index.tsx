@@ -7,10 +7,8 @@ import { VaccinationSection } from "@/components/VaccinationSection";
 import { TravelSection } from "@/components/TravelSection";
 import { TestsOfficineSection } from "@/components/TestsOfficineSection";
 import logo from "@/assets/medisafe-logo.png";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+  return <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Background glow effect */}
       <div className="absolute inset-0 bg-gradient-glow pointer-events-none" />
       
@@ -19,7 +17,7 @@ const Index = () => {
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3">
-              <img src={logo} alt="MediSafe" className="h-16 sm:h-20 md:h-24 w-auto drop-shadow-lg" />
+              <img alt="MediSafe" className="h-16 sm:h-20 md:h-24 w-auto drop-shadow-lg object-cover border-primary-foreground" src="/lovable-uploads/3c1c070f-1f51-4d5b-8b3e-3f2670229449.png" />
             </div>
             <div className="text-right">
               <p className="text-[10px] sm:text-xs text-muted-foreground">Version 1.0</p>
@@ -125,8 +123,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
