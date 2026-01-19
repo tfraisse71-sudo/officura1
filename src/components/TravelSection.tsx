@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Globe, AlertTriangle, Syringe, Shield, Droplets, Info, Loader2, FileDown, ExternalLink } from "lucide-react";
+import { Globe, AlertTriangle, Syringe, Shield, Droplets, Info, Loader2, FileDown } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -308,7 +308,7 @@ export const TravelSection = () => {
           <Card className="p-4 sm:p-6 shadow-md bg-muted/20">
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm sm:text-base font-semibold">Sources officielles</h3>
+                <h3 className="text-sm sm:text-base font-semibold">Sources</h3>
                 <Button 
                   onClick={handleGeneratePdf}
                   disabled={isGeneratingPdf}
@@ -325,52 +325,9 @@ export const TravelSection = () => {
                 </Button>
               </div>
               
-              {travelData.sources && travelData.sources.length > 0 ? (
-                <div className="space-y-2">
-                  {travelData.sources.map((source, idx) => (
-                    <a
-                      key={idx}
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-xs sm:text-sm text-primary hover:underline"
-                    >
-                      <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                      <span>{source.name}</span>
-                    </a>
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <a
-                    href="https://www.pasteur.fr/fr/centre-medical/preparer-son-voyage"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs sm:text-sm text-primary hover:underline"
-                  >
-                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                    <span>Institut Pasteur - Centre médical</span>
-                  </a>
-                  <a
-                    href="https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs sm:text-sm text-primary hover:underline"
-                  >
-                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                    <span>Ministère des Affaires étrangères</span>
-                  </a>
-                  <a
-                    href="https://www.santepubliquefrance.fr"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs sm:text-sm text-primary hover:underline"
-                  >
-                    <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                    <span>Santé Publique France</span>
-                  </a>
-                </div>
-              )}
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Synthèse fondée sur les recommandations des autorités sanitaires (Institut Pasteur, Santé publique France, OMS, Ministère des Affaires étrangères) et la littérature scientifique spécialisée.
+              </p>
               
               <p className="text-[10px] sm:text-xs text-muted-foreground pt-2 border-t">
                 Dernière mise à jour : {new Date().toLocaleDateString('fr-FR')}

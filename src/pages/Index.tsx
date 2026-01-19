@@ -17,7 +17,7 @@ const Index = () => {
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3">
-              <img alt="MediSafe" className="h-16 sm:h-20 md:h-24 w-auto drop-shadow-lg object-cover border-primary-foreground" src="/lovable-uploads/3c1c070f-1f51-4d5b-8b3e-3f2670229449.png" />
+              <img alt="Offi·cura" className="h-16 sm:h-20 md:h-24 w-auto drop-shadow-lg object-cover border-primary-foreground" src="/lovable-uploads/3c1c070f-1f51-4d5b-8b3e-3f2670229449.png" />
             </div>
             <div className="text-right">
               <p className="text-[10px] sm:text-xs text-muted-foreground">Version 1.0</p>
@@ -109,7 +109,7 @@ const Index = () => {
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <Card className="p-3 sm:p-4 bg-secondary/30 border-border/50 mb-3 sm:mb-4 backdrop-blur-sm">
             <p className="text-xs sm:text-sm text-center leading-relaxed text-muted-foreground">
-              <strong className="text-foreground">Avertissement :</strong> MediSafe ne remplace pas l'avis d'un professionnel de santé. 
+              <strong className="text-foreground">Avertissement :</strong> Offi·cura ne remplace pas l'avis d'un professionnel de santé. 
               Les informations présentées sont fournies à titre indicatif dans le cadre d'une aide à la pratique officinale.
             </p>
           </Card>
@@ -119,7 +119,7 @@ const Index = () => {
                 Cadre scientifique et réglementaire
               </a>
             </p>
-            <p className="leading-relaxed">© 2025 MediSafe • Application conforme RGPD • Aucune donnée personnelle collectée</p>
+            <p className="leading-relaxed">© 2025 Offi·cura • Application conforme RGPD • Aucune donnée personnelle collectée</p>
           </div>
         </div>
       </footer>

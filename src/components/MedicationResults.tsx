@@ -1,7 +1,6 @@
-import { ExternalLink, Download, Clock, Loader2 } from "lucide-react";
+import { Clock, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,9 +31,6 @@ export const MedicationResults = ({ medication1, medication2, mode }: Medication
           setData({
             ...result,
             title: `Interactions entre ${medication1} et ${medication2}`,
-            sources: [
-              { name: "Thesaurus ANSM", url: "https://ansm.sante.fr/thesaurus" },
-            ]
           });
         } else if (mode === "phytotherapie" && medication2) {
           const { data: result, error } = await supabase.functions.invoke('phytotherapy-interactions', {
@@ -46,12 +42,6 @@ export const MedicationResults = ({ medication1, medication2, mode }: Medication
           setData({
             ...result,
             title: `Interactions ${medication1} × ${medication2}`,
-            sources: [
-              { name: "ANSM", url: "https://base-donnees-publique.medicaments.gouv.fr" },
-              { name: "Thésaurus ANSM", url: "https://ansm.sante.fr/thesaurus" },
-              { name: "ANSES Plantes", url: "https://www.anses.fr" },
-              { name: "HEDRINE", url: "https://hedrine.univ-grenoble-alpes.fr" },
-            ]
           });
         } else if (mode !== "interactions" && mode !== "phytotherapie") {
           const { data: result, error } = await supabase.functions.invoke('medication-info', {
@@ -61,42 +51,25 @@ export const MedicationResults = ({ medication1, medication2, mode }: Medication
           if (error) throw error;
 
           let title = "";
-          let sources: { name: string; url: string }[] = [];
 
           switch (mode) {
             case "indications-conseils":
               title = `${medication1} - Indications et Conseils de prise`;
-              sources = [
-                { name: "RCP ANSM", url: "https://ansm.sante.fr" },
-                { name: "Vidal", url: "https://www.vidal.fr" },
-              ];
               break;
             case "contre-indications":
               title = `Contre-indications de ${medication1}`;
-              sources = [
-                { name: "RCP ANSM", url: "https://ansm.sante.fr" },
-                { name: "Notice", url: "https://ansm.sante.fr" },
-              ];
               break;
             case "grossesse":
               title = `${medication1} - Utilisation pendant la grossesse`;
-              sources = [
-                { name: "CRAT", url: "https://www.lecrat.fr" },
-                { name: "RCP ANSM", url: "https://ansm.sante.fr" },
-              ];
               break;
             case "allaitement":
               title = `${medication1} - Utilisation pendant l'allaitement`;
-              sources = [
-                { name: "CRAT", url: "https://www.lecrat.fr" },
-              ];
               break;
           }
 
           setData({
             ...result,
             title,
-            sources
           });
         }
       } catch (error: any) {
@@ -111,7 +84,6 @@ export const MedicationResults = ({ medication1, medication2, mode }: Medication
           title: `Informations non disponibles`,
           summary: ["Les données ne sont pas disponibles pour le moment."],
           details: [],
-          sources: []
         });
       } finally {
         setLoading(false);
@@ -178,10 +150,6 @@ export const MedicationResults = ({ medication1, medication2, mode }: Medication
               <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-2">{data.title}</h3>
               {getSeverityBadge(data.severity)}
             </div>
-            <Button variant="outline" size="sm" className="gap-2 w-full sm:w-auto text-xs sm:text-sm">
-              <Download className="h-3 w-3 sm:h-4 sm:w-4" />
-              PDF
-            </Button>
           </div>
 
           {data.summary.length > 0 && (
@@ -214,23 +182,10 @@ export const MedicationResults = ({ medication1, medication2, mode }: Medication
           )}
 
           <div className="space-y-2 pt-2 border-t">
-            <h4 className="text-xs sm:text-sm font-medium">Sources officielles</h4>
-            <div className="flex flex-wrap gap-1.5 sm:gap-2">
-              {data.sources.map((source, idx) => (
-                <Button
-                  key={idx}
-                  variant="outline"
-                  size="sm"
-                  className="gap-1 sm:gap-2 text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-2 h-auto"
-                  asChild
-                >
-                  <a href={source.url} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                    {source.name}
-                  </a>
-                </Button>
-              ))}
-            </div>
+            <h4 className="text-xs sm:text-sm font-medium">Sources</h4>
+            <p className="text-xs text-muted-foreground">
+              Synthèse fondée sur les recommandations des autorités sanitaires (ANSM, HAS, Santé publique France) et la littérature scientifique spécialisée.
+            </p>
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground pt-2">

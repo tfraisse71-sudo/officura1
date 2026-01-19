@@ -1,4 +1,4 @@
-import { ExternalLink, Clock, Loader2, Pill, Building2, AlertTriangle, CheckCircle2, Package, Leaf, ShieldCheck, FlaskConical } from "lucide-react";
+import { Clock, Loader2, Pill, Building2, AlertTriangle, CheckCircle2, Package, Leaf, ShieldCheck, FlaskConical } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -341,31 +341,10 @@ export const EquivalenceResults = ({ medication }: EquivalenceResultsProps) => {
 
       {/* Sources & Footer */}
       <Card className="p-4">
-        <h4 className="text-xs font-semibold mb-2">Sources officielles vérifiées</h4>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-1.5 text-[10px] px-2 py-1 h-auto"
-            asChild
-          >
-            <a href="https://base-donnees-publique.medicaments.gouv.fr/" target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-2.5 w-2.5" />
-              Base publique médicaments
-            </a>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-1.5 text-[10px] px-2 py-1 h-auto"
-            asChild
-          >
-            <a href="https://ansm.sante.fr/" target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-2.5 w-2.5" />
-              ANSM
-            </a>
-          </Button>
-        </div>
+        <h4 className="text-xs font-semibold mb-2">Sources</h4>
+        <p className="text-xs text-muted-foreground">
+          Synthèse fondée sur les recommandations des autorités sanitaires (ANSM, HAS) et la littérature scientifique spécialisée.
+        </p>
         
         <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground mt-3 pt-3 border-t">
           <Clock className="h-2.5 w-2.5" />

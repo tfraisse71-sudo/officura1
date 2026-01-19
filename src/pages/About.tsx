@@ -3,7 +3,6 @@ import { ArrowLeft, Shield, BookOpen, Brain, TestTube, Lock, AlertTriangle, Scal
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import logo from "@/assets/medisafe-logo.png";
 
 const About = () => {
   return (
@@ -17,7 +16,7 @@ const About = () => {
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3">
               <Link to="/">
-                <img src={logo} alt="MediSafe" className="h-12 sm:h-16 md:h-20 w-auto drop-shadow-lg" />
+                <img src="/lovable-uploads/3c1c070f-1f51-4d5b-8b3e-3f2670229449.png" alt="Offi·cura" className="h-12 sm:h-16 md:h-20 w-auto drop-shadow-lg" />
               </Link>
             </div>
             <Link to="/">
@@ -40,7 +39,7 @@ const About = () => {
               Cadre scientifique et réglementaire
             </h1>
             <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
-              Informations sur le positionnement professionnel, les sources et les limites d'utilisation de Medisafe
+              Informations sur le positionnement professionnel, les sources et les limites d'utilisation d'Offi·cura
             </p>
           </div>
 
@@ -56,7 +55,7 @@ const About = () => {
                 </h2>
                 <div className="text-sm sm:text-base text-muted-foreground space-y-2 leading-relaxed">
                   <p>
-                    Medisafe est un <strong className="text-foreground">outil d'aide à la pratique officinale</strong> conçu 
+                    Offi·cura est un <strong className="text-foreground">outil d'aide à la pratique officinale</strong> conçu 
                     pour accompagner les professionnels de santé dans leur exercice quotidien.
                   </p>
                   <p>
@@ -64,7 +63,7 @@ const About = () => {
                     à des informations médicales synthétisées et structurées.
                   </p>
                   <p className="font-medium text-foreground bg-secondary/50 p-3 rounded-lg border-l-4 border-primary">
-                    Medisafe ne se substitue ni au jugement clinique du professionnel, ni aux recommandations 
+                    Offi·cura ne se substitue ni au jugement clinique du professionnel, ni aux recommandations 
                     officielles des autorités sanitaires, ni à la prescription médicale.
                   </p>
                 </div>
@@ -84,7 +83,7 @@ const About = () => {
                 </h2>
                 <div className="text-sm sm:text-base text-muted-foreground space-y-2 leading-relaxed">
                   <p>
-                    Les informations présentées sur Medisafe sont fournies <strong className="text-foreground">à titre indicatif</strong> dans 
+                    Les informations présentées sur Offi·cura sont fournies <strong className="text-foreground">à titre indicatif</strong> dans 
                     le cadre d'une aide à la pratique officinale.
                   </p>
                   <p>
@@ -117,7 +116,7 @@ const About = () => {
                 </h2>
                 <div className="text-sm sm:text-base text-muted-foreground space-y-3 leading-relaxed">
                   <p>
-                    Les contenus proposés par Medisafe résultent d'une <strong className="text-foreground">synthèse indépendante</strong>, 
+                    Les contenus proposés par Offi·cura résultent d'une <strong className="text-foreground">synthèse indépendante</strong>, 
                     élaborée à partir des recommandations des autorités sanitaires et de la littérature scientifique.
                   </p>
                   <p>
@@ -198,7 +197,7 @@ const About = () => {
                 </h2>
                 <div className="text-sm sm:text-base text-muted-foreground space-y-2 leading-relaxed">
                   <p>
-                    Medisafe utilise des technologies d'intelligence artificielle pour <strong className="text-foreground">structurer, 
+                    Offi·cura utilise des technologies d'intelligence artificielle pour <strong className="text-foreground">structurer, 
                     hiérarchiser et synthétiser</strong> l'information médicale.
                   </p>
                   <div className="space-y-2 mt-3">
@@ -272,7 +271,7 @@ const About = () => {
                 </h2>
                 <div className="text-sm sm:text-base text-muted-foreground space-y-2 leading-relaxed">
                   <p>
-                    Medisafe a été conçu dans le respect du <strong className="text-foreground">RGPD</strong> et 
+                    Offi·cura a été conçu dans le respect du <strong className="text-foreground">RGPD</strong> et 
                     des principes de protection des données personnelles.
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
@@ -306,13 +305,13 @@ const About = () => {
                 </h2>
                 <div className="text-sm sm:text-base text-muted-foreground space-y-2 leading-relaxed">
                   <p>
-                    Comme tout outil d'aide à la décision, Medisafe présente des limites qu'il convient de prendre en compte :
+                    Comme tout outil d'aide à la décision, Offi·cura présente des limites qu'il convient de prendre en compte :
                   </p>
                   <ul className="space-y-2 mt-3">
                     <li className="flex items-start gap-2">
                       <div className="w-2 h-2 rounded-full bg-orange-500 mt-2 shrink-0" />
                       <p><strong className="text-foreground">Évolution des recommandations :</strong> les recommandations scientifiques 
-                      et réglementaires évoluent régulièrement. Medisafe s'efforce de maintenir ses contenus à jour, mais 
+                      et réglementaires évoluent régulièrement. Offi·cura s'efforce de maintenir ses contenus à jour, mais 
                       la consultation des textes officiels reste recommandée.</p>
                     </li>
                     <li className="flex items-start gap-2">
@@ -322,7 +321,7 @@ const About = () => {
                     </li>
                     <li className="flex items-start gap-2">
                       <div className="w-2 h-2 rounded-full bg-orange-500 mt-2 shrink-0" />
-                      <p><strong className="text-foreground">Complémentarité :</strong> Medisafe ne remplace pas la consultation 
+                      <p><strong className="text-foreground">Complémentarité :</strong> Offi·cura ne remplace pas la consultation 
                       directe des textes officiels, des RCP ou des bases de données institutionnelles.</p>
                     </li>
                   </ul>
@@ -343,13 +342,13 @@ const About = () => {
                 </h2>
                 <div className="text-sm sm:text-base text-muted-foreground space-y-2 leading-relaxed">
                   <p>
-                    L'utilisation de Medisafe s'effectue <strong className="text-foreground">sous la responsabilité 
+                    L'utilisation d'Offi·cura s'effectue <strong className="text-foreground">sous la responsabilité 
                     du professionnel de santé</strong>, qui reste seul décisionnaire de la conduite à tenir 
                     vis-à-vis de ses patients.
                   </p>
                   <div className="bg-secondary/50 p-4 rounded-lg border border-border mt-3">
                     <p>
-                      Medisafe et ses concepteurs ne peuvent être tenus responsables d'une mauvaise interprétation 
+                      Offi·cura et ses concepteurs ne peuvent être tenus responsables d'une mauvaise interprétation 
                       des informations fournies, d'un usage inapproprié de l'outil ou de décisions prises sur 
                       la base des synthèses proposées.
                     </p>
@@ -371,16 +370,16 @@ const About = () => {
               </h2>
               <div className="text-sm sm:text-base text-muted-foreground space-y-3 leading-relaxed max-w-2xl mx-auto">
                 <p>
-                  Medisafe est un <strong className="text-foreground">outil d'aide à la pratique officinale</strong> qui 
+                  Offi·cura est un <strong className="text-foreground">outil d'aide à la pratique officinale</strong> qui 
                   vise à améliorer la lisibilité, l'accessibilité et la sécurité de l'information médicale 
                   au quotidien.
                 </p>
                 <p>
-                  En synthétisant et en structurant les données issues des référentiels reconnus, Medisafe 
+                  En synthétisant et en structurant les données issues des référentiels reconnus, Offi·cura 
                   accompagne le pharmacien dans sa mission de conseil et de prévention.
                 </p>
                 <p className="font-semibold text-primary text-base sm:text-lg pt-2">
-                  Medisafe ne remplace pas l'expertise du professionnel de santé.
+                  Offi·cura ne remplace pas l'expertise du professionnel de santé.
                 </p>
               </div>
             </div>
@@ -404,7 +403,7 @@ const About = () => {
       <footer className="border-t border-border/50 glass mt-8 sm:mt-10 relative">
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <div className="text-center text-xs sm:text-sm text-muted-foreground">
-            <p>© 2025 MediSafe • Application conforme RGPD • Aucune donnée personnelle collectée</p>
+            <p>© 2025 Offi·cura • Application conforme RGPD • Aucune donnée personnelle collectée</p>
           </div>
         </div>
       </footer>

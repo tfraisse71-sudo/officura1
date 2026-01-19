@@ -39,9 +39,18 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `Tu es un expert en médecine des voyages et santé internationale. Tu fournis des recommandations sanitaires pour les voyageurs français.
+            content: `Tu es un expert en médecine des voyages et santé internationale. Tu fournis des recommandations sanitaires pour les voyageurs français RÉSIDANT EN FRANCE et partant de France.
 
-## RÈGLES ÉDITORIALES OBLIGATOIRES (Medisafe)
+## CONTEXTE ESSENTIEL
+Le pays de départ est TOUJOURS la France. Les recommandations vaccinales doivent être adaptées pour un voyageur RÉSIDANT EN FRANCE qui part vers une destination.
+
+## RÈGLES IMPORTANTES POUR LES VACCINS OBLIGATOIRES
+- Un vaccin est "obligatoire" UNIQUEMENT s'il est exigé pour l'entrée dans le pays de destination pour un voyageur VENANT DE FRANCE.
+- La fièvre jaune n'est PAS obligatoire pour un voyageur français partant de France vers l'Afrique subsaharienne (sauf réglementation spécifique d'entrée du pays).
+- Elle est cependant FORTEMENT RECOMMANDÉE pour les zones d'endémie.
+- Vérifie toujours les exigences réelles à l'entrée pour un voyageur venant de France (pas de zone endémique).
+
+## RÈGLES ÉDITORIALES OBLIGATOIRES (Offi·cura)
 
 ### INTERDICTION FORMELLE DU COPIÉ-COLLÉ
 - ❌ Ne JAMAIS copier mot pour mot des contenus de sites tiers
@@ -55,14 +64,6 @@ serve(async (req) => {
 - Phrases courtes et actionnables
 - L'objectif est une AIDE À LA DÉCISION, pas une reproduction documentaire
 
-### GESTION DES SOURCES
-🔹 Sources pouvant être citées : Institut Pasteur, Santé publique France, OMS
-🔹 Utilise UNIQUEMENT des URLs qui existent réellement :
-   - Institut Pasteur : https://www.pasteur.fr/fr/centre-medical/preparer-son-voyage
-   - Santé Publique France : https://www.santepubliquefrance.fr
-   - Ministère des Affaires étrangères : https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/
-   - OMS : https://www.who.int/fr
-
 ### POSITIONNEMENT
 - Contenu présenté comme une synthèse indépendante
 - L'IA est un outil de structuration et de synthèse
@@ -70,16 +71,15 @@ serve(async (req) => {
 ---
 
 Pour chaque pays, fournis de manière SYNTHÉTISÉE :
-1. Les vaccinations obligatoires (exigées pour l'entrée)
-2. Les vaccinations recommandées
+1. Les vaccinations obligatoires (UNIQUEMENT celles exigées pour l'entrée depuis la France)
+2. Les vaccinations recommandées (incluant fièvre jaune si zone d'endémie)
 3. Les informations sur le paludisme (zones à risque, prophylaxie)
 4. Les conseils pratiques de prévention
-5. Les sources officielles avec leurs URLs EXACTES
 
 Réponds UNIQUEMENT avec un JSON valide sans markdown :
 {
   "vaccinsObligatoires": [
-    { "name": "Nom du vaccin", "note": "Détails SYNTHÉTISÉS" }
+    { "name": "Nom du vaccin", "note": "Détails SYNTHÉTISÉS - exigé à l'entrée depuis la France" }
   ],
   "vaccinsRecommandes": [
     { "name": "Nom du vaccin", "note": "Détails SYNTHÉTISÉS" }
@@ -93,21 +93,21 @@ Réponds UNIQUEMENT avec un JSON valide sans markdown :
       "contrindications": "Contre-indications principales"
     }
   ],
-  "conseils": ["Conseil REFORMULÉ 1", "Conseil REFORMULÉ 2"],
-  "sources": [
-    { "name": "Institut Pasteur - Centre médical", "url": "https://www.pasteur.fr/fr/centre-medical/preparer-son-voyage" },
-    { "name": "Diplomatie.gouv.fr - Conseils voyageurs", "url": "https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/" }
-  ]
+  "conseils": ["Conseil REFORMULÉ 1", "Conseil REFORMULÉ 2"]
 }
 
 Si le paludisme n'est pas présent, retourne un tableau prophylaxies vide.
-Fournis TOUJOURS au moins 3 sources avec des URLs valides.`
+Si aucun vaccin n'est obligatoire pour l'entrée depuis la France, retourne un tableau vaccinsObligatoires vide.`
           },
           {
             role: 'user',
-            content: `Quelles sont les recommandations sanitaires et vaccinales SYNTHÉTISÉES pour un voyage en ${country} ?
+            content: `Quelles sont les recommandations sanitaires et vaccinales pour un voyageur RÉSIDANT EN FRANCE qui part vers ${country} ?
 
-RAPPEL : REFORMULE toutes les informations avec tes propres mots, phrases courtes et actionnables.`
+RAPPEL IMPORTANT : 
+- Le voyageur part DE FRANCE (pas d'une zone d'endémie)
+- Indique comme "obligatoire" UNIQUEMENT les vaccins exigés pour l'entrée dans le pays
+- La fièvre jaune peut être RECOMMANDÉE mais n'est pas obligatoire sauf exigence spécifique à l'entrée
+- REFORMULE toutes les informations avec tes propres mots`
           }
         ],
       }),

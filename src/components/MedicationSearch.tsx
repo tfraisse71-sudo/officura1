@@ -9,6 +9,52 @@ import { MedicationResults } from "./MedicationResults";
 import { EquivalenceResults } from "./EquivalenceResults";
 import { supabase } from "@/integrations/supabase/client";
 
+// Liste des plantes médicinales courantes pour l'autocomplétion
+const COMMON_PLANTS = [
+  "Millepertuis",
+  "Ginkgo biloba",
+  "Valériane",
+  "Échinacée",
+  "Ginseng",
+  "Curcuma",
+  "Ail",
+  "Réglisse",
+  "Sauge",
+  "Passiflore",
+  "Aubépine",
+  "Mélisse",
+  "Griffonia",
+  "Rhodiola",
+  "Ashwagandha",
+  "Chardon-marie",
+  "Artichaut",
+  "Boldo",
+  "Pissenlit",
+  "Fenouil",
+  "Camomille",
+  "Thé vert",
+  "Guarana",
+  "Maté",
+  "Kava",
+  "Harpagophytum",
+  "Cassis",
+  "Ortie",
+  "Prêle",
+  "Reine-des-prés",
+  "Saule blanc",
+  "Canneberge",
+  "Pamplemousse",
+  "Cranberry",
+  "Lavande",
+  "Romarin",
+  "Thym",
+  "Eucalyptus",
+  "Plantain",
+  "Sureau",
+  "Propolis",
+  "Gelée royale",
+];
+
 export const MedicationSearch = () => {
   const [searchTerm1, setSearchTerm1] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
@@ -44,19 +90,29 @@ export const MedicationSearch = () => {
     return combined.slice(0, 10);
   }, [searchTerm1, medications, aiSuggestions1]);
 
+  // Suggestions for second input (medications or plants depending on mode)
   const suggestions2 = useMemo(() => {
     if (searchTerm2.length < 2) return [];
     const term = searchTerm2.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    if (interactionType === "phytotherapy") {
+      // Filter plant suggestions
+      return COMMON_PLANTS
+        .filter(plant => 
+          plant.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(term)
+        )
+        .slice(0, 10);
+    }
+    
     const localResults = medications
       .filter(med => 
         med.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").startsWith(term)
       )
       .slice(0, 10);
     
-    // Combine local results with AI suggestions
     const combined = [...localResults, ...aiSuggestions2.filter(ai => !localResults.includes(ai))];
     return combined.slice(0, 10);
-  }, [searchTerm2, medications, aiSuggestions2]);
+  }, [searchTerm2, medications, aiSuggestions2, interactionType]);
 
   // Reset highlighted index when suggestions change
   useEffect(() => {
@@ -366,8 +422,8 @@ export const MedicationSearch = () => {
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground mb-1">Informations officielles</p>
             <p>
-              Les informations affichées proviennent des sources officielles françaises (ANSM, CRAT, HAS).
-              Elles ne remplacent pas l'avis d'un professionnel de santé.
+              Synthèse fondée sur les recommandations des autorités sanitaires (ANSM, HAS, Santé publique France, OMS, Institut Pasteur) et la littérature scientifique spécialisée.
+              Ces informations ne remplacent pas l'avis d'un professionnel de santé.
             </p>
           </div>
         </div>
