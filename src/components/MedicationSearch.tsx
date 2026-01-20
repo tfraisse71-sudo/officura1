@@ -369,31 +369,34 @@ export const MedicationSearch = () => {
                     onChange={(e) => {
                       setSearchTerm2(e.target.value);
                       setSelectedMed2(null);
-                      if (interactionType === "medication") {
-                        setShowSuggestions2(true);
-                      }
+                      setShowSuggestions2(true);
                     }}
-                    onFocus={() => {
-                      if (interactionType === "medication") {
-                        setShowSuggestions2(true);
-                      }
-                    }}
+                    onFocus={() => setShowSuggestions2(true)}
                     onClick={handleInputClick}
-                    onKeyDown={interactionType === "medication" ? handleKeyDown2 : undefined}
+                    onKeyDown={handleKeyDown2}
                     className="pl-8 sm:pl-10 text-sm"
                   />
                 </div>
-                {interactionType === "medication" && showSuggestions2 && suggestions2.length > 0 && (
+                {showSuggestions2 && suggestions2.length > 0 && (
                   <Card className="absolute z-[100] w-full mt-1 max-h-60 overflow-auto border-border/50 bg-card shadow-lg">
-                    {suggestions2.map((med, idx) => (
+                    {suggestions2.map((item, idx) => (
                       <button
                         key={idx}
-                        onClick={() => handleSelectMed2(med)}
-                        className={`w-full text-left px-3 sm:px-4 py-2.5 hover:bg-primary/20 hover:text-primary transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0 ${
-                          idx === highlightedIndex2 ? "bg-primary/20 text-primary" : ""
+                        onClick={() => handleSelectMed2(item)}
+                        className={`w-full text-left px-3 sm:px-4 py-2.5 transition-all duration-200 text-xs sm:text-sm border-b border-border/30 last:border-0 ${
+                          idx === highlightedIndex2 
+                            ? interactionType === "phytotherapy" 
+                              ? "bg-green-500/20 text-green-400" 
+                              : "bg-primary/20 text-primary"
+                            : interactionType === "phytotherapy"
+                              ? "hover:bg-green-500/20 hover:text-green-400"
+                              : "hover:bg-primary/20 hover:text-primary"
                         }`}
                       >
-                        {med}
+                        {interactionType === "phytotherapy" && (
+                          <Leaf className="inline-block h-3 w-3 mr-2 text-green-400" />
+                        )}
+                        {item}
                       </button>
                     ))}
                   </Card>
