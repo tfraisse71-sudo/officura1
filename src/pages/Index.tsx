@@ -17,7 +17,7 @@ const Index = () => {
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3">
-              <img alt="Offi·cura" className="h-12 sm:h-14 md:h-16 w-auto drop-shadow-lg object-contain" src={logo} />
+              <img alt="Offi·cura" className="h-16 sm:h-20 md:h-24 w-auto drop-shadow-lg object-contain" src={logo} />
             </div>
             <div className="text-right">
               <p className="text-[10px] sm:text-xs text-muted-foreground">Version 1.0</p>
