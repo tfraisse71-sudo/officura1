@@ -15,14 +15,8 @@ const Index = () => {
       {/* Header */}
       <header className="border-b border-border/50 glass sticky top-0 z-40 shadow-lg">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <img alt="Offi·cura" className="h-16 sm:h-20 md:h-24 w-auto drop-shadow-lg object-contain" src={logo} />
-            </div>
-            <div className="text-right">
-              <p className="text-[10px] sm:text-xs text-muted-foreground">Version 1.0</p>
-              <p className="text-[10px] sm:text-xs text-muted-foreground hidden sm:inline">MAJ : {new Date().toLocaleDateString('fr-FR')}</p>
-            </div>
+          <div className="flex items-center justify-center">
+            <img alt="Offi·cura" className="h-[7.5rem] w-auto drop-shadow-lg object-contain" src={logo} />
           </div>
         </div>
       </header>
