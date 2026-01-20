@@ -72,7 +72,7 @@ Pour chaque tranche d'âge/poids, fournir de manière concise :
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-3-flash-preview',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Fournis les posologies SYNTHÉTISÉES pour le médicament français: ${medicationName}
