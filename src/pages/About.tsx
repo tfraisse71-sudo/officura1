@@ -3,10 +3,8 @@ import { ArrowLeft, Shield, BookOpen, Brain, TestTube, Lock, AlertTriangle, Scal
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-
 const About = () => {
-  return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+  return <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Background glow effect */}
       <div className="absolute inset-0 bg-gradient-glow pointer-events-none" />
       
@@ -16,7 +14,7 @@ const About = () => {
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3">
               <Link to="/">
-                <img src="/lovable-uploads/3c1c070f-1f51-4d5b-8b3e-3f2670229449.png" alt="Offi·cura" className="h-12 sm:h-16 md:h-20 w-auto drop-shadow-lg" />
+                <img alt="Offi·cura" className="h-12 sm:h-16 md:h-20 w-auto drop-shadow-lg" src="/lovable-uploads/dadd0902-879c-4250-8d21-e657a344b27b.png" />
               </Link>
             </div>
             <Link to="/">
@@ -407,8 +405,6 @@ const About = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default About;
