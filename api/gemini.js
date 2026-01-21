@@ -1,4 +1,3 @@
-console.log("ENV KEY:", process.env.GEMINI_API_KEY);
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -12,7 +11,7 @@ export default async function handler(req, res) {
     }
 
     const url =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
       encodeURIComponent(apiKey);
 
     const r = await fetch(url, {
@@ -25,7 +24,11 @@ export default async function handler(req, res) {
     });
 
     const data = await r.json();
-    if (!r.ok) return res.status(r.status).json({ error: "Gemini error", details: data });
+
+    if (!r.ok) {
+      // <-- c’est ici que tu verras pourquoi (quota, API non activée, etc.)
+      return res.status(r.status).json({ error: "Gemini error", details: data });
+    }
 
     const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "";
     return res.status(200).json({ text });
@@ -33,4 +36,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server error", details: String(e) });
   }
 }
- 
+
