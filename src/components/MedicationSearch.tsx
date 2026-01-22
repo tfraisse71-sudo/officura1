@@ -153,7 +153,6 @@ export const MedicationSearch = () => {
       
       // Only call AI if we have less than 5 local results
       if (localResults.length < 5) {
-        if (localResults.length < 5) {
   setIsLoadingAi1(true);
 
   try {
@@ -174,10 +173,9 @@ Donne des éléments utiles au comptoir :
 
     const text = await askGemini(prompt);
 
-    // On transforme la réponse texte en "suggestions" compatibles avec l’UI
     const suggestions = text
       .split("\n")
-      .map(l => l.replace(/^[-•]/, "").trim())
+      .map(l => l.replace(/^[\-•]/, "").trim())
       .filter(Boolean)
       .slice(0, 8);
 
@@ -190,10 +188,14 @@ Donne des éléments utiles au comptoir :
   } finally {
     setIsLoadingAi1(false);
   }
-    };
 
-    const timeoutId = setTimeout(fetchAiSuggestions, 500);
-    return () => clearTimeout(timeoutId);
+} else {
+  setAiSuggestions1([]);
+}
+
+const timeoutId = setTimeout(fetchAiSuggestions, 500);
+return () => clearTimeout(timeoutId);
+
   }, [searchTerm1, medications]);
 
   useEffect(() => {
