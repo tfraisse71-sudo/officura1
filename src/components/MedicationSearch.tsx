@@ -190,12 +190,6 @@ Donne des éléments utiles au comptoir :
   } finally {
     setIsLoadingAi1(false);
   }
-}
-
-        }
-      } else {
-        setAiSuggestions1([]);
-      }
     };
 
     const timeoutId = setTimeout(fetchAiSuggestions, 500);
