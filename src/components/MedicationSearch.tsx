@@ -1,3 +1,18 @@
+async function askGemini(prompt: string): Promise<string> {
+  const r = await fetch("/api/gemini", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt })
+  });
+
+  const data = await r.json();
+  if (!r.ok) {
+    throw new Error(data?.error || "Erreur IA");
+  }
+
+  return data.text;
+}
+
 import { useState, useMemo, useEffect, useRef } from "react";
 import { Search, AlertCircle, Info, Leaf, Pill } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -138,19 +153,45 @@ export const MedicationSearch = () => {
       
       // Only call AI if we have less than 5 local results
       if (localResults.length < 5) {
-        setIsLoadingAi1(true);
-        try {
-          const { data, error } = await supabase.functions.invoke('search-medications', {
-            body: { searchTerm: searchTerm1.slice(0, 2) }
-          });
-          
-          if (!error && data?.medications) {
-            setAiSuggestions1(data.medications);
-          }
-        } catch (error) {
-          console.error('Error fetching AI suggestions:', error);
-        } finally {
-          setIsLoadingAi1(false);
+        if (localResults.length < 5) {
+  setIsLoadingAi1(true);
+
+  try {
+    const prompt = `
+Tu es un assistant d’aide à la pratique officinale (France).
+Réponds de façon synthétique, claire et professionnelle.
+Ne cite pas de sources, ne fais pas de copier-coller.
+Structure en points courts.
+
+Médicament recherché :
+${searchTerm1}
+
+Donne des éléments utiles au comptoir :
+- Indications principales
+- Précautions importantes
+- Points de vigilance
+`;
+
+    const text = await askGemini(prompt);
+
+    // On transforme la réponse texte en "suggestions" compatibles avec l’UI
+    const suggestions = text
+      .split("\n")
+      .map(l => l.replace(/^[-•]/, "").trim())
+      .filter(Boolean)
+      .slice(0, 8);
+
+    setAiSuggestions1(suggestions);
+  } catch (e) {
+    console.error(e);
+    setAiSuggestions1([
+      "Impossible de générer une synthèse pour le moment."
+    ]);
+  } finally {
+    setIsLoadingAi1(false);
+  }
+}
+
         }
       } else {
         setAiSuggestions1([]);
