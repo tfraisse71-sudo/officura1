@@ -140,23 +140,31 @@ export const MedicationSearch = () => {
 
   // Fetch AI suggestions when local results are insufficient
   useEffect(() => {
-    const fetchAiSuggestions = async () => {
-      if (searchTerm1.length < 2) {
-        setAiSuggestions1([]);
-        return;
-      }
-      
-      const term = searchTerm1.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      const localResults = medications.filter(med => 
-        med.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").startsWith(term)
-      );
-      
-      // Only call AI if we have less than 5 local results
-      if (localResults.length < 5) {
-  setIsLoadingAi1(true);
+  const fetchAiSuggestions = async () => {
+    if (searchTerm1.length < 2) {
+      setAiSuggestions1([]);
+      return;
+    }
 
-  try {
-    const prompt = `
+    const term = searchTerm1
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    const localResults = medications.filter((med) =>
+      med
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .startsWith(term)
+    );
+
+    // Only call AI if we have less than 5 local results
+    if (localResults.length < 5) {
+      setIsLoadingAi1(true);
+
+      try {
+        const prompt = `
 Tu es un assistant d’aide à la pratique officinale (France).
 Réponds de façon synthétique, claire et professionnelle.
 Ne cite pas de sources, ne fais pas de copier-coller.
@@ -171,32 +179,31 @@ Donne des éléments utiles au comptoir :
 - Points de vigilance
 `;
 
-    const text = await askGemini(prompt);
+        const text = await askGemini(prompt);
 
-    const suggestions = text
-      .split("\n")
-      .map(l => l.replace(/^[\-•]/, "").trim())
-      .filter(Boolean)
-      .slice(0, 8);
+        const suggestions = text
+          .split("\n")
+          .map((l) => l.replace(/^[\-•]/, "").trim())
+          .filter(Boolean)
+          .slice(0, 8);
 
-    setAiSuggestions1(suggestions);
-  } catch (e) {
-    console.error(e);
-    setAiSuggestions1([
-      "Impossible de générer une synthèse pour le moment."
-    ]);
-  } finally {
-    setIsLoadingAi1(false);
-  }
+        setAiSuggestions1(suggestions);
+      } catch (e) {
+        console.error(e);
+        setAiSuggestions1(["Impossible de générer une synthèse pour le moment."]);
+      } finally {
+        setIsLoadingAi1(false);
+      }
+    } else {
+      // IMPORTANT: ce else doit être ICI
+      setAiSuggestions1([]);
+    }
+  };
 
-} else {
-  setAiSuggestions1([]);
-}
+  const timeoutId = setTimeout(fetchAiSuggestions, 500);
+  return () => clearTimeout(timeoutId);
+}, [searchTerm1, medications]);
 
-const timeoutId = setTimeout(fetchAiSuggestions, 500);
-return () => clearTimeout(timeoutId);
-
-  }, [searchTerm1, medications]);
 
   useEffect(() => {
     const fetchAiSuggestions = async () => {
